@@ -11,7 +11,8 @@ import SwiftUI
 struct PlentifoodApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+//            ContentView()
+            SearchResultsView()
         }
     }
 }
