@@ -11,13 +11,13 @@ import MapKit
 // Map pane (pins from real API) //
 struct SitesMapPane: View {
     let sites: [Site]
-    @Binding var selectedSite: Site?
+    @Binding var selectedSiteForModal: Site?
     
     @State private var position: MapCameraPosition
     
-    init(sites: [Site], selectedSite: Binding<Site?>, center: CLLocationCoordinate2D) {
+    init(sites: [Site], selectedSiteForModal: Binding<Site?>, center: CLLocationCoordinate2D) {
         self.sites = sites
-        self._selectedSite = selectedSite
+        self._selectedSiteForModal = selectedSiteForModal
         
         let region = MKCoordinateRegion(
             center: center,
@@ -27,7 +27,7 @@ struct SitesMapPane: View {
     }
     
     var body: some View {
-        Map(position: $position, selection: $selectedSite) {
+        Map(position: $position, selection: $selectedSiteForModal) {
             ForEach(sites) { site in
                 Marker(site.name, coordinate: site.coordinate)
                     .tag(site)
@@ -42,7 +42,7 @@ struct SitesMapPane: View {
 }
 
 private struct SitesMapPanePreviewWrapper: View {
-   @State private var selectedSite: Site? = nil
+   @State private var selectedSiteForModal: Site? = nil
 
    private let sampleSites: [Site] = [
       Site(
@@ -76,7 +76,7 @@ private struct SitesMapPanePreviewWrapper: View {
    var body: some View {
       SitesMapPane(
          sites: sampleSites,
-         selectedSite: $selectedSite,
+         selectedSiteForModal: $selectedSiteForModal,
          center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
       )
    }

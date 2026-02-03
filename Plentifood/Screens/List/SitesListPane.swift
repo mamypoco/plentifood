@@ -11,12 +11,12 @@ import SwiftUI
 
 struct SitesListPane: View {
     let sites: [Site]
-    @Binding var selectedSite: Site?
+    @Binding var selectedSiteForSheet: Site?
     
     var body: some View {
           List(sites) { site in
              Button {
-                selectedSite = site
+                selectedSiteForSheet = site
              } label: {
                  SiteRowCard(site: site, secondaryLine: .phone)
              }
@@ -77,7 +77,7 @@ struct SiteRowCard: View {
 //    }
     
     private struct SitesListPanePreviewWrapper: View {
-       @State private var selectedSite: Site? = nil
+       @State private var selectedSiteForSheet: Site? = nil
 
        private let sampleSites: [Site] = [
           Site(
@@ -111,7 +111,7 @@ struct SiteRowCard: View {
        var body: some View {
           SitesListPane(
              sites: sampleSites,
-             selectedSite: $selectedSite
+             selectedSiteForSheet: $selectedSiteForSheet
           )
        }
     }

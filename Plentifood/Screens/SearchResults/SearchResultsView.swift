@@ -34,8 +34,9 @@ struct SearchResultsView: View {
     // Other state
     @StateObject private var vm = NearbySitesViewModel()
     @State private var mode: Mode = .map
-    @State private var selectedSite: Site? = nil // detail modal
-//    @State private var detailSite: Site? = nil  //full detail sheet
+//    @State private var selectedSite: Site? = nil // original
+    @State private var selectedSiteForModal: Site? // map only
+    @State private var selectedSiteForSheet: Site?
     
     // temporary "Seattle" center for testing:
     private let defaultLat = 47.6062
@@ -102,13 +103,13 @@ struct SearchResultsView: View {
                 if mode == .map {
                     SitesMapPane(
                         sites: vm.sites,
-                        selectedSite: $selectedSite,
+                        selectedSiteForModal: $selectedSiteForModal,
                         center: CLLocationCoordinate2D(latitude: defaultLat, longitude: defaultLon)
                     )
                 } else {
                     SitesListPane(
                         sites: vm.sites,
-                        selectedSite: $selectedSite
+                        selectedSiteForSheet: $selectedSiteForSheet
                     )
                 }
                 
@@ -123,7 +124,7 @@ struct SearchResultsView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         // Open detail modal
-        .onChange(of: selectedSite) { _, newValue in
+        .onChange(of: selectedSiteForModal) { _, newValue in
             if let site = newValue {
                activeSheet = .mini(site)
             }
@@ -145,9 +146,10 @@ struct SearchResultsView: View {
                     .presentationDetents([.medium, .large])
               }
            }
-//        .sheet(item: $selectedSite) { site in
-//            SiteDetailSheet(site: site)
-//                .presentationDetents([.medium, .large])
+            .sheet(item: $selectedSiteForSheet) { site in
+                SiteDetailSheet(site: site)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
         
         .alert("Error", isPresented: .constant(vm.errorMessage != nil)) {
             Button("OK") { vm.errorMessage = nil }
@@ -155,6 +157,8 @@ struct SearchResultsView: View {
             Text(vm.errorMessage ?? "")
         }
     }
+   
+     }
     
 }
     

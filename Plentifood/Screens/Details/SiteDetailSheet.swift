@@ -150,11 +150,11 @@ struct SiteDetailSheet: View {
             
             if let notes = site.service_notes, !notes.isEmpty {
                 Text(notes)
-                    .font(.footnote)
+                    .font(.callout)
                     .foregroundStyle(.secondary)
             } else {
                 Text("No notes.")
-                    .font(.footnote)
+                    .font(.callout)
                     .foregroundStyle(.secondary)
             }
         }
