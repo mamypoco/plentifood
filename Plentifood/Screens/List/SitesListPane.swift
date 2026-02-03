@@ -14,25 +14,27 @@ struct SitesListPane: View {
     @Binding var selectedSite: Site?
     
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                ForEach(sites) { site in
-                    Button {
-                        selectedSite = site
-                    } label: {
-                        SiteRowCard(site: site)
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.horizontal)
-                }
-            }
-            .padding(.vertical, 8)
-        }
+          List(sites) { site in
+             Button {
+                selectedSite = site
+             } label: {
+                 SiteRowCard(site: site, secondaryLine: .phone)
+             }
+             .buttonStyle(.plain)
+          }
+          .listStyle(.plain)
     }
 }
 
 struct SiteRowCard: View {
+    enum SecondaryLine {
+        case phone
+        case none
+    }
+    
+    
     let site: Site
+    var secondaryLine: SecondaryLine = .none
     
     var body: some View {
         HStack(spacing: 12) {
@@ -45,29 +47,27 @@ struct SiteRowCard: View {
                     .font(.headline)
                     .foregroundStyle(.primary)
                 
-                Text(site.organization_name ?? "-")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                
                 Text(site.shortAddress)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .font(.subheadline)
+                    .foregroundStyle(.primary.opacity(0.75)) //keep the fonts show
                     .lineLimit(2)
+                
+                if secondaryLine == .phone, let phone = site.phone, !phone.isEmpty {
+                    Text(phone)
+                        .font(.subheadline)
+                        .foregroundStyle(.primary.opacity(0.75)) //keep the fonts show
+                }
+                
+
+                
             }
-            
-            Spacer()
+            .padding(12)
+            //        .background(.background)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(radius: 2)
         }
-        .padding(12)
-        .background(.background)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(.quaternary, lineWidth: 1)
-        )
-        .shadow(radius: 2)
     }
 }
-
     
 //    #Preview {
 //        SitesListPane(

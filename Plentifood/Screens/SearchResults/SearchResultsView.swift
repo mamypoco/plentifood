@@ -17,10 +17,25 @@ struct SearchResultsView: View {
         case list = "List"
     }
     
+    enum ActiveSheet: Identifiable {
+        case mini(Site)
+        case detail(Site)
+        
+        var id: Int {
+            switch self {
+            case .mini(let site): return site.id
+            case .detail(let site): return site.id + 1000000
+            }
+        }
+    }
+    // Active sheet state
+    @State private var activeSheet: ActiveSheet? = nil
+    
+    // Other state
     @StateObject private var vm = NearbySitesViewModel()
     @State private var mode: Mode = .map
-    
-    @State private var selectedSite: Site? = nil
+    @State private var selectedSite: Site? = nil // detail modal
+//    @State private var detailSite: Site? = nil  //full detail sheet
     
     // temporary "Seattle" center for testing:
     private let defaultLat = 47.6062
@@ -81,6 +96,7 @@ struct SearchResultsView: View {
             .padding(.horizontal)
             
             // MARK: Map Content
+
             ZStack {
                 // Either mode is map or list
                 if mode == .map {
@@ -106,13 +122,33 @@ struct SearchResultsView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        // Open detail modal
+        .onChange(of: selectedSite) { _, newValue in
+            if let site = newValue {
+               activeSheet = .mini(site)
+            }
+         }
         .task {
             await vm.load(lat: defaultLat, lon: defaultLon, radiusMiles: defaultRadius)
         }
-        .sheet(item: $selectedSite) { site in
-            SiteDetailSheet(site: site)
-                .presentationDetents([.medium, .large])
-        }
+        //attaching 2 different sheets
+        .sheet(item: $activeSheet) { sheet in
+              switch sheet {
+              case .mini(let site):
+                 SiteDetailModal(site: site) {
+                    activeSheet = .detail(site)
+                 }
+                 .presentationDetents([.height(140)])
+
+              case .detail(let site):
+                 SiteDetailSheet(site: site)
+                    .presentationDetents([.medium, .large])
+              }
+           }
+//        .sheet(item: $selectedSite) { site in
+//            SiteDetailSheet(site: site)
+//                .presentationDetents([.medium, .large])
+        
         .alert("Error", isPresented: .constant(vm.errorMessage != nil)) {
             Button("OK") { vm.errorMessage = nil }
         } message: {
@@ -121,6 +157,7 @@ struct SearchResultsView: View {
     }
     
 }
+    
 
 #Preview {
     SearchResultsView()

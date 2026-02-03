@@ -12,6 +12,10 @@ import Combine
 // For now, we’ll hardcode a Seattle coordinate so you can test quickly.
 // Later you can replace it with user location.
 
+//fetch data from the API
+//expose it as @Published state
+//stay UI-agnostic
+
 @MainActor
 final class NearbySitesViewModel: ObservableObject {
     @Published var sites: [Site] = []
