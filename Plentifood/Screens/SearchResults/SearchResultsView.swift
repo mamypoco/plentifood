@@ -8,8 +8,9 @@
 import SwiftUI
 import MapKit
 
-//Container screen (Map/List toggle like your design)
-//This is your “Map and List page” base. Search and filter buttons can be UI-only for now.
+// Search input field
+//Container screen (Map/List toggle)
+
 
 struct SearchResultsView: View {
     enum Mode: String, CaseIterable {

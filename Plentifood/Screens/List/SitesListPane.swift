@@ -38,9 +38,12 @@ struct SiteRowCard: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(.quaternary)
+            
+            Image(site.listIconAssetName)
+                .resizable()
+                .scaledToFit()
                 .frame(width: 70, height: 70)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
             
             VStack(alignment: .leading, spacing: 6) {
                 Text(site.name)

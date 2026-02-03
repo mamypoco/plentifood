@@ -132,35 +132,29 @@ extension Site {
    }
 }
 
+// Returns the asset name for the icon shown in SiteRowCard.
+extension Site {
+    
+   var listIconAssetName: String {
+      // Prefer service type (from services array)
+      if let serviceKey = services.first?.name {
+         switch serviceKey {
+         case "food_bank":
+            return "foodbank"
+         case "non_profit":
+            return "nonprofit"
+         case "church":
+            return "church"
+         case "community_center":
+            return "community"
+         default:
+            return "others"
+         }
+      }
 
-
-//struct Site: Codable, Identifiable, Hashable {
-//    let id: Int
-//    let name: String
-//    let latitude: Double
-//    let longitude: Double
-//    
-//    let address_line1: String?
-//    let city: String?
-//    let state: String?
-//    let postal_code: String?
-//    let phone: String?
-//    let organization_name: String?
-//    let status: String?
-//    
-//    var coordinate: CLLocationCoordinate2D {
-//        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-//    }
-//    
-//    var shortAddress: String {
-//        let line1 = address_line1 ?? ""
-//        let cityState = [city, state].compactMap { $0 }.joined(separator: ", ")
-//        let postal = postal_code ?? ""
-//        return [line1, cityState, postal]
-//            .filter { !$0.isEmpty }
-//            .joined(separator: " ")
-//    }
-//}
-
+      // Fallback (if services is empty)
+      return "others"
+   }
+}
 
 
