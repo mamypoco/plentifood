@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 // Search input field
-//Container screen (Map/List toggle)
+// Container screen (Map/List toggle)
 
 
 struct SearchResultsView: View {
@@ -35,7 +35,6 @@ struct SearchResultsView: View {
     // Other state
     @StateObject private var vm = NearbySitesViewModel()
     @State private var mode: Mode = .map
-//    @State private var selectedSite: Site? = nil // original
     @State private var selectedSiteForModal: Site? // map only
     @State private var selectedSiteForSheet: Site?
     
@@ -44,12 +43,21 @@ struct SearchResultsView: View {
     private let defaultLon = -122.3321
     private let defaultRadius = 10.0
     
+    @Environment(\.dismiss) private var dismiss
+    
     
     var body: some View {
         VStack(spacing: 12) {
             
             // MARK: Searchbar placeholder (UI only for now)
             HStack(spacing: 10) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title2)
+                        .padding(10)
+                }
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .foregroundStyle(.secondary)
@@ -120,11 +128,18 @@ struct SearchResultsView: View {
                         .background(.thinMaterial)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .navigationBarHidden(true)
+// option to limit height due to back arrow
+//        .navigationBarBackButtonHidden(true)
+//        .offset(y: -13)
+//        .padding(.top, -8)
+//        .navigationBarTitleDisplayMode(.inline)
+        
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        // Open detail modal
         .onChange(of: selectedSiteForModal) { _, newValue in
             if let site = newValue {
                activeSheet = .mini(site)
@@ -158,10 +173,11 @@ struct SearchResultsView: View {
             Text(vm.errorMessage ?? "")
         }
     }
-   
-     }
+            
+  }
     
 }
+
     
 
 #Preview {

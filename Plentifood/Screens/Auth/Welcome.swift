@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct WelcomeView: View {
     var body: some View {
         VStack  {
             Text("Welcome to the \nPlentiFood")
@@ -18,8 +18,10 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             
-            Button {
-                print("Begin pressed")
+//            Button {
+//                print("Begin pressed")
+            NavigationLink {
+                SearchResultsView()
             } label: {
                 Text("Let's begin")
                     .frame(maxWidth: .infinity)
@@ -28,7 +30,7 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
             .tint(.orange)
             
-            
+            // NavigationLink { StaffLoginView() } to be replaced with Button
             Button{
                 print("Login pressed")
             } label: {
@@ -49,5 +51,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    WelcomeView()
 }
