@@ -27,33 +27,28 @@ struct SiteDetailSheet: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                // Map header
-//                Map(position: $camera) {
-//                    Annotation(site.name, coordinate: site.coordinate) {
-//                        Image(systemName: "mappin.circle.fill")
-//                            .font(.title)
-//                    }
-//                }
-//                .frame(height: 220)
-//                .clipShape(RoundedRectangle(cornerRadius: 16))
-//                .padding(.horizontal)
-//                .padding(.top, 8)
-//                .allowsHitTesting(false)
-                
-                // Content Panel
                 VStack(alignment: .leading, spacing: 16) {
                     headerSection
                     
-                    Divider()
+//                    Divider()
+//                    servicesSection
                     
+                    Divider()
                     infoSection
                     
-                    // Later sections (stub for now)
-                    // Divider(); servicesSection
-                    // Divider(); hoursSection
-                    // Divider(); notesSection
+                    Divider()
+                    eligibilitySection
+                    
+                    Divider()
+                    hoursSection
+                    
+                    Divider()
+                    notesSection
+                    
                 }
-                .padding()
+                .padding(.horizontal, 30)
+                .padding(.top, 12)
+                .padding(.bottom, 24)
             }
             .navigationTitle("Details")
             .navigationBarTitleDisplayMode(.inline)
@@ -65,21 +60,23 @@ struct SiteDetailSheet: View {
         }
     }
     
+    // MARK: components for each section
+    
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(site.name)
                 .font(.title2)
                 .bold()
             
-            Text(site.shortAddress)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+//            Text(site.shortAddress)
+//                .font(.subheadline)
+//                .foregroundStyle(.secondary)
             
-            if let org = site.organization_name, !org.isEmpty {
-                Text("Organization: \(org)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
+            let serviceLabels = site.services.map { $0.name.displayLabel }
+                  if !serviceLabels.isEmpty {
+                     WrapChips(items: serviceLabels)
+                        .padding(.top, 4)
+                  }
         }
     }
     
@@ -97,7 +94,73 @@ struct SiteDetailSheet: View {
         }
     }
     
+//    private var servicesSection: some View {
+//        VStack(alignment: .leading, spacing: 10) {
+//            SectionTitle(icon: "gearshape", "Services")
+//        
+//            // Simple wrap (good enough to start):
+//            // It will line-break naturally if you use LazyVGrid later.
+//            WrapChips(items: site.services.map { $0.name.displayLabel })
+//        }
+//    }
 
+    private var eligibilitySection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionTitle(icon: "person.crop.circle", "Eligibility")
+            
+            if let eligibility = site.eligibility, !eligibility.isEmpty {
+                TagChip(text: eligibility.displayLabel)
+            } else {
+                Text("Not specified")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+    
+    private let weekdayOrder = [
+       "monday", "tuesday", "wednesday",
+       "thursday", "friday", "saturday", "sunday"
+    ]
+
+    
+    private var hoursSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionTitle(icon: "clock", "Hours")
+            
+            ForEach(weekdayOrder, id: \.self) { day in
+                HStack(alignment: .firstTextBaseline) {
+                    TagChip(text: day.uppercased())
+                    Spacer()
+                    
+                    let hoursText = site.hoursForDay(day)
+                    Text(hoursText)
+                        .font(.subheadline)
+                        .foregroundStyle(hoursText == "Closed" ? .secondary : .primary)
+                }
+                
+            }
+        }
+        
+    }
+    
+    private var notesSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionTitle(icon:"note", "Notes")
+            
+            if let notes = site.service_notes, !notes.isEmpty {
+                Text(notes)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            } else {
+                Text("No notes.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+    
+    
     
     
     #Preview {

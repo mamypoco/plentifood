@@ -8,16 +8,23 @@
 import SwiftUI
 
 struct SectionTitle: View {
+    let icon: String
     let text: String
 
-      init(_ text: String) {
+    init(icon: String, _ text: String) {
+        self.icon = icon
          self.text = text
       }
 
       var body: some View {
-         Text(text)
-            .font(.headline)
-            .padding(.bottom, 4)
+          HStack(spacing: 8) {
+              Image(systemName: icon)
+                  .foregroundStyle(.secondary)
+              
+              Text(text)
+                 .font(.headline)
+          }
+          .padding(.bottom, 2)
       }
 }
 

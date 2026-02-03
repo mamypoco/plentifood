@@ -8,11 +8,18 @@
 import SwiftUI
 
 struct WrapChips: View {
+    let items: [String]
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 90), alignment: .leading)], alignment: .leading, spacing: 8) {
+            ForEach(items, id:\.self) { item in
+                TagChip(text: item)
+            }
+        }
     }
 }
 
-#Preview {
-    WrapChips()
-}
+
+//#Preview {
+//    WrapChips()
+//}
