@@ -23,6 +23,8 @@ final class PlentiFoodAPI {
             URLQueryItem(name: "lon", value: "\(lon)"),
             URLQueryItem(name: "radius_miles", value: "\(radiusMiles)")
         ]
+        print("🌐 Request URL:", components?.url?.absoluteString ?? "nil")
+
         
         guard let url = components?.url else { throw APIError.badURL }
     

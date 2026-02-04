@@ -33,15 +33,24 @@ struct SearchResultsView: View {
     @State private var activeSheet: ActiveSheet? = nil
     
     // Other state
-    @StateObject private var vm = NearbySitesViewModel()
+    @EnvironmentObject var vm: NearbySitesViewModel
     @State private var mode: Mode = .map
     @State private var selectedSiteForModal: Site? // map only
     @State private var selectedSiteForSheet: Site?
     
+    // Search bar
+    @State private var searchText = "Seattle"
+    @FocusState private var isSearchFocused: Bool
+    
+    // Filter
+    @State private var isShowingFilters = false
+    @State private var filters: SearchFilters = .default
+    
     // temporary "Seattle" center for testing:
     private let defaultLat = 47.6062
     private let defaultLon = -122.3321
-    private let defaultRadius = 10.0
+    private let defaultRadius = 5.0
+    
     
     @Environment(\.dismiss) private var dismiss
     
@@ -61,8 +70,28 @@ struct SearchResultsView: View {
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .foregroundStyle(.secondary)
-                    Text("Seattle")
+                    
+                    TextField("Search city or address", text: $searchText)
                         .foregroundStyle(.secondary)
+                        .focused($isSearchFocused)
+                        .textInputAutocapitalization(.words)
+                        .disableAutocorrection(true)
+                        .submitLabel(.search)
+                        .onSubmit {
+                            print("onSubmit fired with:", searchText)
+                            Task {
+                                await vm.searchLocation(searchText, radiusMiles: defaultRadius)
+                                }
+                        }
+                       
+                    if !searchText.isEmpty {
+                        Button {
+                            searchText = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                     
                     Spacer()
                 }
@@ -71,10 +100,14 @@ struct SearchResultsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 
                 Button {
-                    // Filters later
+                    // Filters
+                    isShowingFilters = true
                 } label : {
                     Image(systemName: "slider.horizontal.3")
                         .font(.title3)
+                }
+                .sheet(isPresented: $isShowingFilters) {
+                    FilterView(filters: $filters)
                 }
             }
             .padding(.horizontal)
@@ -99,6 +132,16 @@ struct SearchResultsView: View {
                 }
                 
                 Spacer()
+                
+                // debugging search feature
+                Text("Sites: \(vm.sites.count)  Total: \(vm.totalResults)")
+                   .font(.footnote)
+                   .foregroundStyle(.secondary)
+                
+//                Text("First: \(vm.sites.first?.name ?? "nil")")
+//                   .font(.footnote)
+//                   .foregroundStyle(.secondary)
+
                 
                 Text("\(vm.sites.count) Results")
                     .fontWeight(.semibold)
@@ -181,5 +224,8 @@ struct SearchResultsView: View {
     
 
 #Preview {
-    SearchResultsView()
+    NavigationStack {
+            SearchResultsView()
+        }
+        .environmentObject(NearbySitesViewModel())
 }

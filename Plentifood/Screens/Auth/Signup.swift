@@ -75,26 +75,26 @@ struct SignUp: View {
             }
 
 // MARK: - Models
-enum OrgType: String, CaseIterable, Identifiable, Codable {
-   case foodBank = "food_bank"
-   case church = "church"
-   case communityCenter = "community_center"
-   case nonProfit = "non_profit"
-   case others = "others"
-
-   var id: String { rawValue }
-
-   // What the user sees in the dropdown
-   var displayName: String {
-      switch self {
-      case .foodBank: return "Food bank"
-      case .church: return "Church"
-      case .communityCenter: return "Community center"
-      case .nonProfit: return "Non-profit"
-      case .others: return "Others"
-      }
-   }
-}
+//enum OrgType: String, CaseIterable, Identifiable, Codable {
+//   case foodBank = "food_bank"
+//   case church = "church"
+//   case communityCenter = "community_center"
+//   case nonProfit = "non_profit"
+//   case others = "others"
+//
+//   var id: String { rawValue }
+//
+//   // What the user sees in the dropdown
+//   var displayName: String {
+//      switch self {
+//      case .foodBank: return "Food bank"
+//      case .church: return "Church"
+//      case .communityCenter: return "Community center"
+//      case .nonProfit: return "Non-profit"
+//      case .others: return "Others"
+//      }
+//   }
+//}
 
 // Picker Row (dropdown)
 struct OrgTypeRow: View {
