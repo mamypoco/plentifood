@@ -23,18 +23,30 @@ final class NearbySitesViewModel: ObservableObject {
     @Published var totalResults: Int = 0
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    @Published var mapCenter: CLLocationCoordinate2D?
+    @Published var filters: SearchFilters = .default // filter feature
+    
+    @Published var currentLat: Double = 47.6062
+    @Published var currentLon: Double = -122.3321
+    @Published var currentRadiusMiles: Double = 5.0
     
     private let api = PlentiFoodAPI()
     private let geocoder = CLGeocoder()
     
+    func load() async {
+       await load(
+          lat: currentLat,
+          lon: currentLon,
+          radiusMiles: currentRadiusMiles
+       )
+    }
+    
     func load(lat: Double, lon: Double, radiusMiles: Double) async {
         isLoading = true
         errorMessage = nil
-        print("load() called lat/lon:", lat, lon, "radius:", radiusMiles)
-        
         
         do {
-            let response = try await api.fetchNearbySites(lat: lat, lon: lon, radiusMiles: radiusMiles)
+            let response = try await api.fetchNearbySites(lat: lat, lon: lon, radiusMiles: radiusMiles, filters: self.filters)
             print("API response total:", response.total_results)
             
             totalResults = response.total_results
@@ -48,14 +60,15 @@ final class NearbySitesViewModel: ObservableObject {
         isLoading = false
     }
     
-    // NEW: Search by text (city/address) -> lat/lon -> load()
+    // Search by text (city/address) -> lat/lon -> load()
     func searchLocation(_ query: String, radiusMiles: Double) async {
+                
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         
         isLoading = true
         errorMessage = nil
-        
+
         do {
             let placemarks = try await geocoder.geocodeAddressString(trimmed)
             print("📍 placemarks:", placemarks.count)
@@ -67,7 +80,10 @@ final class NearbySitesViewModel: ObservableObject {
                 return
             }
             print("📍 coord:", coordinate.latitude, coordinate.longitude)
+            // Center focus
+            mapCenter = coordinate
             await load(lat: coordinate.latitude, lon: coordinate.longitude, radiusMiles: radiusMiles)
+            
         } catch {
             print("❌ geocode error:", error)
             errorMessage = "Could not find that location."

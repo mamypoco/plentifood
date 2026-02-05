@@ -13,11 +13,21 @@ struct SitesMapPane: View {
     let sites: [Site]
     @Binding var selectedSiteForModal: Site?
     
-    @State private var position: MapCameraPosition
+    // Camera center focus
+    @State private var position: MapCameraPosition = .automatic
+    let center: CLLocationCoordinate2D
+    private var centerKey: String {
+       "\(center.latitude),\(center.longitude)"
+    }
     
-    init(sites: [Site], selectedSiteForModal: Binding<Site?>, center: CLLocationCoordinate2D) {
+    init(
+        sites: [Site],
+        selectedSiteForModal: Binding<Site?>,
+        center: CLLocationCoordinate2D
+    ) {
         self.sites = sites
         self._selectedSiteForModal = selectedSiteForModal
+        self.center = center
         
         let region = MKCoordinateRegion(
             center: center,
@@ -31,6 +41,16 @@ struct SitesMapPane: View {
             ForEach(sites) { site in
                 Marker(site.name, coordinate: site.coordinate)
                     .tag(site)
+            }
+        }
+        .task(id: centerKey) {
+            withAnimation(.easeInOut(duration: 0.6)) {
+                position = .region(
+                    MKCoordinateRegion(
+                        center: center,
+                        span: MKCoordinateSpan(latitudeDelta: 0.08, longitudeDelta: 0.08)
+                    )
+                )
             }
         }
         .ignoresSafeArea(edges: .bottom)
