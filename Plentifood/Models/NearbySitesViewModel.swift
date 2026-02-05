@@ -26,9 +26,12 @@ final class NearbySitesViewModel: ObservableObject {
     @Published var mapCenter: CLLocationCoordinate2D?
     @Published var filters: SearchFilters = .default // filter feature
     
+    static let defaultRadiusMiles: Double = 10.0
+    
     @Published var currentLat: Double = 47.6062
     @Published var currentLon: Double = -122.3321
-    @Published var currentRadiusMiles: Double = 5.0
+    @Published var currentRadiusMiles: Double = defaultRadiusMiles
+   
     
     private let api = PlentiFoodAPI()
     private let geocoder = CLGeocoder()

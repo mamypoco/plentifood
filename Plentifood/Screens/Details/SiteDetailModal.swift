@@ -24,7 +24,8 @@ struct SiteDetailModal: View {
             Button("View") {
                 onDetails()
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.bordered)
+            .tint(.orange)
             .controlSize(.small)
             .padding(.trailing, 12)
             .padding(.bottom, 10)

@@ -43,13 +43,16 @@ struct FilterView: View {
                sectionTitle("Radius")
                HStack(spacing: 12) {
                   Text("Within")
-                  TextField("", text: $radiusText)
+                  TextField("10", text: $radiusText)
                      .keyboardType(.decimalPad)
                      .textFieldStyle(.roundedBorder)
                      .frame(width: 110)
                   Text("miles")
-                  Spacer()
+//                  Spacer()
                }
+                Text("Default: 10 miles")
+                   .font(.footnote)
+                   .foregroundStyle(.secondary)
 
                Button {
                   apply()
@@ -72,6 +75,7 @@ struct FilterView: View {
                   dismiss()
                } label: {
                   Image(systemName: "chevron.left")
+                       .tint(.gray)
                }
             }
 
@@ -98,18 +102,25 @@ struct FilterView: View {
    }
 
    private func reset() {
-      draft = .default
-      radiusText = ""
+       let reset = SearchFilters.default
+       // reset local draft UI
+       draft = reset
+       radiusText = ""
+       // Apply immediately
+       filters = reset
    }
 
    private func apply() {
       // radiusText -> Double?
       let trimmed = radiusText.trimmingCharacters(in: .whitespacesAndNewlines)
-      if trimmed.isEmpty {
-         draft.radiusMiles = nil
-      } else {
-         draft.radiusMiles = Double(trimmed)
-      }
+       
+       if trimmed.isEmpty {
+             draft.radiusMiles = nil
+        } else if let r = Double(trimmed), r > 0 {
+             draft.radiusMiles = r
+        } else {
+             draft.radiusMiles = nil   // or show validation message
+        }
 
       filters = draft
       dismiss()

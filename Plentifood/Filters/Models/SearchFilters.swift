@@ -16,43 +16,18 @@ struct SearchFilters: Equatable {
    static let `default` = SearchFilters()
 }
 
-//enum ServiceType: String, CaseIterable, Identifiable {
-//   case foodBank = "food_bank"
-//   case meal = "meal"
-//
-//   var id: String { rawValue }
-//   var label: String {
-//      switch self {
-//      case .foodBank: return "FOOD BANK"
-//      case .meal: return "MEAL"
-//      }
-//   }
-//}
+// for filter count
+extension SearchFilters {
+   var activeFilterCount: Int {
+      var count = 0
+      if !days.isEmpty { count += 1 }
+      if !orgTypes.isEmpty { count += 1 }
+      if !serviceTypes.isEmpty { count += 1 }
+      if radiusMiles != nil { count += 1 }
+      return count
+   }
 
-//enum OrgType: String, CaseIterable, Identifiable {
-//   case foodBank = "food_bank"
-//   case church = "church"
-//   case nonprofit = "non_profit"
-//   case communityCenter = "community_center"
-//   case other = "others"
-//
-//   var id: String { rawValue }
-//   var label: String {
-//      switch self {
-//      case .foodBank: return "FOOD BANK"
-//      case .church: return "CHURCH"
-//      case .nonprofit: return "NONPROFIT"
-//      case .communityCenter: return "COMMUNITY CENTER"
-//      case .other: return "OTHER"
-//      }
-//   }
-//}
-
-//enum DayOfWeek: String, CaseIterable, Identifiable {
-//   case monday, tuesday, wednesday, thursday, friday, saturday, sunday
-//   var id: String { rawValue }
-//   var label: String { rawValue.uppercased() }
-//}
-
-
-
+   var hasActiveFilters: Bool {
+      activeFilterCount > 0
+   }
+}

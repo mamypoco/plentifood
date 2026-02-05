@@ -81,6 +81,7 @@ struct SearchResultsView: View {
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(.title2)
+                        .tint(.gray)
                         .padding(10)
                 }
                 
@@ -135,17 +136,21 @@ struct SearchResultsView: View {
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 
+                // Filters
                 Button {
-                    // Filters
                     isShowingFilters = true
                 } label : {
                     Image(systemName: "slider.horizontal.3")
                         .font(.title3)
+                        .tint(.orange)
                 }
                 .sheet(isPresented: $isShowingFilters) {
                     FilterView(filters: $vm.filters)
                 }
                 .onChange(of: vm.filters) {
+                    vm.currentRadiusMiles =
+                    vm.filters.radiusMiles ?? NearbySitesViewModel.defaultRadiusMiles
+                    
                     Task {
                         await vm.load()
                     }
@@ -153,26 +158,34 @@ struct SearchResultsView: View {
                 
             }
             .padding(.horizontal)
-                
-                
-                // Map or List Toggle
-                Picker("", selection: $mode) {
-                    ForEach(Mode.allCases, id: \.self) { item in
-                        Text(item.rawValue).tag(item)
-                    }
+            
+            
+            // Map or List Toggle
+            Picker("", selection: $mode) {
+                ForEach(Mode.allCases, id: \.self) { item in
+                    Text(item.rawValue).tag(item)
                 }
-                .pickerStyle(.segmented)
-                .padding(.horizontal)
-                
-                // Filters + Results row (you can wire filters later)
-                HStack {
-                    HStack(spacing: 8) {
-                        Text("3")
-                            .foregroundStyle(.orange)
-                        Text("Filters")
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            
+            // Filters + Results row
+            HStack {
+                if vm.filters.hasActiveFilters {
+                    Text("\(vm.filters.activeFilterCount)")
+                        .foregroundStyle(.orange)
+                    
+                    Text(vm.filters.activeFilterCount == 1 ? "Filter" : "Filters")
+                    
+                    Button {
+                        vm.filters = .default   // clear filters
+                    } label: {
                         Image(systemName: "xmark.circle")
                             .foregroundStyle(.secondary)
                     }
+                } else {
+                    Text("Filters")
+                }
                     
                     Spacer()
                     
@@ -188,7 +201,11 @@ struct SearchResultsView: View {
                         SitesMapPane(
                             sites: vm.sites,
                             selectedSiteForModal: $selectedSiteForModal,
-                            center: vm.mapCenter ?? centerCoordinate
+                            center: CLLocationCoordinate2D(
+                                  latitude: vm.currentLat,
+                                  longitude: vm.currentLon
+                               ),
+                               radiusMiles: vm.currentRadiusMiles
                         )
                     } else {
                         SitesListPane(
@@ -207,13 +224,8 @@ struct SearchResultsView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-                .navigationBarHidden(true)
-            // option to limit height due to back arrow
-            //        .navigationBarBackButtonHidden(true)
-            //        .offset(y: -13)
-            //        .padding(.top, -8)
-            //        .navigationBarTitleDisplayMode(.inline)
-            
+                .navigationBarHidden(true) //default arrow is disabled due to height issue
+                        
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .onChange(of: selectedSiteForModal) { _, newValue in
                     if let site = newValue {
