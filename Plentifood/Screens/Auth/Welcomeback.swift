@@ -104,15 +104,8 @@ struct Welcomeback: View {
             .disabled(username.isEmpty)
         }
         .navigationDestination(isPresented: $goToDashboard) {
-            AdminDashboardView(
-                data: AdminDashboardData(
-                    adminName: AdminSessionStore.loadUsername() ?? username,
-                    organization: OrganizationInfo(
-                        name: "Loading...",
-                        type: "Loading..."
-                    ),
-                    sites: []
-                )
+                AdminDashboardView(
+                    adminName: AdminSessionStore.loadUsername() ?? username
             )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)  // place content toward top
