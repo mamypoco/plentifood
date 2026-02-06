@@ -14,6 +14,12 @@ struct Welcomeback: View {
     var body: some View {
         
         VStack(alignment: .center, spacing: 16) {
+//            Image("logo")
+//                .resizable()
+//                .scaledToFit()
+//                .frame(width: 80, height: 80)
+//                .frame(maxWidth: .infinity, alignment: .leading) // align left
+//            
             Text("Welcome Back!")
                 .font(.largeTitle).bold()
             
@@ -31,7 +37,7 @@ struct Welcomeback: View {
                     .autocorrectionDisabled()
                 
             }
-            .padding(.top, 70)
+//            .padding(.top, 70)
             .padding(.bottom, 5)
             .frame(maxWidth: .infinity , alignment: .leading)
             .padding(.horizontal, 20)
@@ -76,6 +82,16 @@ struct Welcomeback: View {
                 )
             )
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)  // place content toward top
+        .padding(.top, 175) // Between logo and Welcome back
+        .overlay(alignment: .topLeading) {
+              Image("logo")
+                 .resizable()
+                 .scaledToFit()
+                 .frame(width: 80, height: 80)
+                 .padding(.leading, 16)
+                 .padding(.top, 20)
+           }
 
     }
 }

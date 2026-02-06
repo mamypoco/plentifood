@@ -61,10 +61,15 @@ struct SignUp: View {
                         }
                         .buttonStyle(PrimaryOrangeButton())
 
-                        Button("Staff Login") {
-                           // TODO: navigate to login
-                        }
-                        .buttonStyle(OutlineOrangeButton())
+                         NavigationLink {
+                             Welcomeback()
+                         } label: {
+                             Text("Staff Login")
+                                 .frame(maxWidth: .infinity)
+                                 .padding(.vertical, 5)
+                         }
+                         .buttonStyle(.bordered)
+                         .tint(.orange)
                      }
                      .padding(.horizontal, 28)
                      .padding(.top, 8)
