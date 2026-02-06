@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct Welcomeback: View {
+    
     @State private var username: String = ""
     @State private var goToDashboard = false
+    @State private var errorMessage: String?
+    @State private var isLoading = false
+    
+    private let api = PlentiFoodAPI()
     
     var body: some View {
         
@@ -36,6 +41,12 @@ struct Welcomeback: View {
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                 
+                if let errorMessage {
+                   Text(errorMessage)
+                      .font(.footnote)
+                      .foregroundStyle(.red)
+                }
+                
             }
 //            .padding(.top, 70)
             .padding(.bottom, 5)
@@ -50,18 +61,40 @@ struct Welcomeback: View {
             
 
             Button {
-                let trimmed = username.trimmingCharacters(in: .whitespacesAndNewlines)
+                Task {
+                    let trimmed = username.trimmingCharacters(in: .whitespacesAndNewlines)
                     guard !trimmed.isEmpty else {
+                        errorMessage = "Please enter username"
                         return
                     }
-
-                print("Username entered:", trimmed)
-                goToDashboard = true   // 👈 trigger navigation
+                    
+                    isLoading = true
+                    errorMessage = nil
+                    
+                    do {
+                        let res = try await api.login(username: trimmed)
+                        
+                        // Save session locally
+                        AdminSessionStore.save(
+                            userId: res.id,
+                            username: res.username,
+                            organizationId: res.organization_id
+                        )
+                        goToDashboard = true
+                    } catch {
+                        errorMessage = error.localizedDescription
+                    }
+                    
+                    isLoading = false
+                }
                 
             } label: {
-                Text("Let's begin")
+                Text(isLoading ? "Loggin in ..." : "Let's begin")
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 5)
+                    .buttonStyle(.borderedProminent)
+                    .tint(.orange)
+                    .disabled(isLoading)
                     
             }
             .buttonStyle(.borderedProminent)
@@ -73,12 +106,12 @@ struct Welcomeback: View {
         .navigationDestination(isPresented: $goToDashboard) {
             AdminDashboardView(
                 data: AdminDashboardData(
-                    adminName: username,
+                    adminName: AdminSessionStore.loadUsername() ?? username,
                     organization: OrganizationInfo(
-                        name: "Urban Fresh Food Collective of South Park",
-                        type: "Community Center"
+                        name: "Loading...",
+                        type: "Loading..."
                     ),
-                    sites: SiteInfo.mocks   // mock data for now
+                    sites: []
                 )
             )
         }

@@ -8,10 +8,33 @@
 
 import Foundation
 
-enum APIError: Error {
-    case badURL
-    case badResponse(Int)
+// API error
+enum APIError: Error, LocalizedError {
+   case badURL
+   case badResponse(Int)
+   case message(String)
+
+   var errorDescription: String? {
+      switch self {
+      case .badURL: return "Invalid URL"
+      case .badResponse(let code): return "Request failed (\(code))"
+      case .message(let msg): return msg
+      }
+   }
 }
+
+// For login
+struct LoginResponse: Codable {
+   let id: Int
+   let username: String
+   let organization_id: Int
+}
+
+struct APIErrorResponse: Codable {
+   let error: String
+}
+
+
 // API Client //
 final class PlentiFoodAPI {
     private let baseURL = "https://plentifood-api.onrender.com"
@@ -58,6 +81,35 @@ final class PlentiFoodAPI {
         }
         return try JSONDecoder().decode(NearbySitesResponse.self, from: data)
     }
+    
+    // Login function
+    func login(username: String) async throws -> LoginResponse {
+       guard let url = URL(string: baseURL + "/login") else { throw APIError.badURL }
+
+       var request = URLRequest(url: url)
+       request.httpMethod = "POST"
+       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+       let body = ["username": username]
+       request.httpBody = try JSONEncoder().encode(body)
+
+       let (data, response) = try await URLSession.shared.data(for: request)
+
+       guard let http = response as? HTTPURLResponse else {
+          throw APIError.badResponse(-1)
+       }
+
+       guard (200...299).contains(http.statusCode) else {
+          // Try to decode Flask error: {"error": "..."}
+          if let err = try? JSONDecoder().decode(APIErrorResponse.self, from: data) {
+             throw APIError.message(err.error)
+          }
+          throw APIError.badResponse(http.statusCode)
+       }
+
+       return try JSONDecoder().decode(LoginResponse.self, from: data)
+    }
+
 }
 
 
