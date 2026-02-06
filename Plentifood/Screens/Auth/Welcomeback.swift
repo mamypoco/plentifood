@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Welcomeback: View {
     @State private var username: String = ""
+    @State private var goToDashboard = false
     
     var body: some View {
         
@@ -41,10 +42,16 @@ struct Welcomeback: View {
             }
             .padding(.horizontal, 20)
             
-            
+
             Button {
-                print("Username entered:", username)
-                // MARK: add next action here
+                let trimmed = username.trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !trimmed.isEmpty else {
+                        return
+                    }
+
+                print("Username entered:", trimmed)
+                goToDashboard = true   // 👈 trigger navigation
+                
             } label: {
                 Text("Let's begin")
                     .frame(maxWidth: .infinity)
@@ -57,11 +64,25 @@ struct Welcomeback: View {
             .padding(.horizontal, 20)
             .disabled(username.isEmpty)
         }
-       
+        .navigationDestination(isPresented: $goToDashboard) {
+            AdminDashboardView(
+                data: AdminDashboardData(
+                    adminName: username,
+                    organization: OrganizationInfo(
+                        name: "Urban Fresh Food Collective of South Park",
+                        type: "Community Center"
+                    ),
+                    sites: SiteInfo.mocks   // mock data for now
+                )
+            )
+        }
+
     }
 }
     
     #Preview {
-        Welcomeback()
+        NavigationStack {
+              Welcomeback()
+           }
     }
 

@@ -13,13 +13,13 @@ struct WelcomeView: View {
             Text("Welcome to the \nPlentiFood")
                 .font(.largeTitle).bold()
                 .multilineTextAlignment(.center)
-
+            
             Image("salad-basket")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             
-//            Button {
-//                print("Begin pressed")
+            //            Button {
+            //                print("Begin pressed")
             NavigationLink {
                 SearchResultsView()
             } label: {
@@ -31,24 +31,36 @@ struct WelcomeView: View {
             .tint(.orange)
             
             // NavigationLink { StaffLoginView() } to be replaced with Button
-            Button{
-                print("Login pressed")
-            } label: {
-                Text("Staff Login")
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 5)
+            NavigationLink {
+                Welcomeback()
+//                AdminDashboardView(
+//                    data: AdminDashboardData(
+//                        adminName: "UrbanChick",
+//                        organization: OrganizationInfo(
+//                            name: "Urban Fresh Food Collective of South Park",
+//                            type: "Community Center"
+//                        ),
+//                        sites: SiteInfo.mocks  // or your array inline
+//                    )
+//                )
+                
+                } label: {
+                    Text("Staff Login")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 5)
+                }
+                .buttonStyle(.bordered)
+                .tint(.orange)
+                .padding(5)
+                
+                Text("Don't have a staff account as a staff? Sign up")
+                
             }
-            .buttonStyle(.bordered)
-            .tint(.orange)
-            .padding(5)
-            
-            Text("Don't have a staff account as a staff? Sign up")
-            
+            .frame(maxWidth: .infinity)
+            .padding()
         }
-        .frame(maxWidth: .infinity)
-        .padding()
     }
-}
+
 
 #Preview {
     WelcomeView()
