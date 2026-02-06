@@ -122,8 +122,9 @@ struct FilterView: View {
              draft.radiusMiles = nil   // or show validation message
         }
 
-      filters = draft
-      dismiss()
+       filters = draft
+       dismissKeyboard()
+       dismiss()
    }
 }
 

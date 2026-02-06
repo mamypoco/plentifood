@@ -13,10 +13,10 @@ import MapKit
 private func regionForRadius(
    center: CLLocationCoordinate2D,
    radiusMiles: Double,
-   padding: Double = 1.25
+   padding: Double = 1.00  // region focus zoom
 ) -> MKCoordinateRegion {
    let meters = radiusMiles * 1609.34
-    let diameter = meters * 1.10 * padding // higher the far zoom tightness
+    let diameter = meters * 1.00 * padding // higher the far zoom tightness
 
    return MKCoordinateRegion(
       center: center,
@@ -29,27 +29,45 @@ private func regionForRadius(
 // Map pane (pins from real API) //
 struct SitesMapPane: View {
     let sites: [Site]
-    @Binding var selectedSiteForModal: Site?
+    @Binding var activeSheet: SearchResultsView.ActiveSheet?
     
-    // Camera center focus
+    // Center focus
     @State private var position: MapCameraPosition = .automatic
+    // Selection id for Map (more reliable than selecting Site)
+      @State private var selectedSiteID: Int? = nil
+    
     let center: CLLocationCoordinate2D
     let radiusMiles: Double
+    let onMapTap: () -> Void
+
+    
     private var centerKey: String {
        "\(center.latitude),\(center.longitude)"
     }
+    // Helper for zoom-on-pin
+    private func regionForSelectedSite(_ site: Site) -> MKCoordinateRegion {
+       MKCoordinateRegion(
+          center: site.coordinate,
+          latitudinalMeters: 1200,
+          longitudinalMeters: 1200
+       )
+    }
+
     
     init(
         sites: [Site],
-        selectedSiteForModal: Binding<Site?>,
+        activeSheet: Binding<SearchResultsView.ActiveSheet?>,
         center: CLLocationCoordinate2D,
-        radiusMiles: Double
+        radiusMiles: Double,
+        onMapTap: @escaping () -> Void
     ) {
         self.sites = sites
-        self._selectedSiteForModal = selectedSiteForModal
+        self._activeSheet = activeSheet
         self.center = center
         self.radiusMiles = radiusMiles
+        self.onMapTap = onMapTap
         
+        // Initial camera = fit radius area
         let region = regionForRadius(
             center: center,
             radiusMiles: radiusMiles
@@ -58,13 +76,20 @@ struct SitesMapPane: View {
     }
     
     var body: some View {
-        Map(position: $position, selection: $selectedSiteForModal) {
+        Map(position: $position, selection: $selectedSiteID) {
             ForEach(sites) { site in
                 Marker(site.name, coordinate: site.coordinate)
-                    .tag(site)
+                    .tag(site.id)
             }
         }
+        .onTapGesture {
+           onMapTap()
+        }
+        // It runs when center or radius changes (search / radius change)
         .task(id: "\(centerKey)-\(radiusMiles)") {
+            
+            selectedSiteID = nil
+            
             withAnimation(.easeInOut(duration: 0.6)) {
                 position = .region(
                     regionForRadius(
@@ -74,6 +99,41 @@ struct SitesMapPane: View {
                 )
             }
         }
+        // Pin selection -> Zoom in
+        .onChange(of: selectedSiteID) { _, newID in
+            guard
+                let id = newID,
+                let site = sites.first(where: { $0.id == id })
+            else { return }
+            
+            activeSheet = .mini(site)
+
+           withAnimation(.easeInOut(duration: 0.35)) {
+              position = .region(
+                 MKCoordinateRegion(
+                    center: site.coordinate,
+                    latitudinalMeters: 1200,
+                    longitudinalMeters: 1200
+                 )
+              )
+           }
+        }
+        // Results change → zoom OUT (only if no pin selected)
+        .onChange(of: sites.map(\.id)) { _, _ in
+           guard selectedSiteID == nil else { return }
+
+           withAnimation(.easeInOut(duration: 0.6)) {
+              position = .region(
+                 regionForRadius(center: center, radiusMiles: radiusMiles)
+              )
+           }
+        }
+        // when sheeet closes, clear pin selection
+        .onChange(of: activeSheet) { _, newValue in
+              if newValue == nil {
+                 selectedSiteID = nil
+              }
+           }
         .ignoresSafeArea(edges: .bottom)
     }
 }
@@ -83,7 +143,7 @@ struct SitesMapPane: View {
 }
 
 private struct SitesMapPanePreviewWrapper: View {
-   @State private var selectedSiteForModal: Site? = nil
+    @State private var activeSheet: SearchResultsView.ActiveSheet? = nil
 
    private let sampleSites: [Site] = [
       Site(
@@ -117,11 +177,14 @@ private struct SitesMapPanePreviewWrapper: View {
    var body: some View {
       SitesMapPane(
          sites: sampleSites,
-         selectedSiteForModal: $selectedSiteForModal,
-         center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321), radiusMiles: 10.0
+         activeSheet: $activeSheet,
+         center: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321), radiusMiles: 10.0, onMapTap: {
+             // no-op for preview
+          }
       )
    }
 }
+
 
 //#Preview {
 //    SitesMapPane()

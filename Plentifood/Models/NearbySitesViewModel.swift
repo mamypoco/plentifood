@@ -84,8 +84,13 @@ final class NearbySitesViewModel: ObservableObject {
             }
             print("📍 coord:", coordinate.latitude, coordinate.longitude)
             // Center focus
-            mapCenter = coordinate
-            await load(lat: coordinate.latitude, lon: coordinate.longitude, radiusMiles: radiusMiles)
+//            mapCenter = coordinate
+            await MainActor.run {
+               self.currentLat = coordinate.latitude
+               self.currentLon = coordinate.longitude
+            }
+            await load()   // uses currentLat/currentLon/currentRadiusMiles + filters
+//            await load(lat: coordinate.latitude, lon: coordinate.longitude, radiusMiles: radiusMiles)
             
         } catch {
             print("❌ geocode error:", error)

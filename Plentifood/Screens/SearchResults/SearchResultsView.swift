@@ -18,7 +18,7 @@ struct SearchResultsView: View {
         case list = "List"
     }
     
-    enum ActiveSheet: Identifiable {
+    enum ActiveSheet: Identifiable, Decodable, Equatable {
         case mini(Site)
         case detail(Site)
         
@@ -57,17 +57,6 @@ struct SearchResultsView: View {
        )
     }
     
-    // "Seattle" center for default:
-//    private let defaultLat = 47.6062
-//    private let defaultLon = -122.3321
-//    private let defaultRadius = 5.0
-//    
-    // for filter
-//    var currentLat: Double
-//    var currentLon: Double
-//    var currentRadius: Double
-    
-    
     @Environment(\.dismiss) private var dismiss
     
     
@@ -101,6 +90,8 @@ struct SearchResultsView: View {
                             let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
                             guard !trimmed.isEmpty else { return }
                             
+                            isSearchFocused = false // dismiss keyboard
+                            
                             debounceTask?.cancel()
                             Task {
                                 await vm.searchLocation(trimmed, radiusMiles: vm.currentRadiusMiles)
@@ -126,7 +117,7 @@ struct SearchResultsView: View {
                             searchText = ""
                         } label: {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(.gray)
                         }
                     }
                     
@@ -148,8 +139,10 @@ struct SearchResultsView: View {
                     FilterView(filters: $vm.filters)
                 }
                 .onChange(of: vm.filters) {
-                    vm.currentRadiusMiles =
-                    vm.filters.radiusMiles ?? NearbySitesViewModel.defaultRadiusMiles
+                   selectedSiteForModal = nil
+
+                   vm.currentRadiusMiles =
+                      vm.filters.radiusMiles ?? NearbySitesViewModel.defaultRadiusMiles
                     
                     Task {
                         await vm.load()
@@ -158,7 +151,6 @@ struct SearchResultsView: View {
                 
             }
             .padding(.horizontal)
-            
             
             // Map or List Toggle
             Picker("", selection: $mode) {
@@ -199,14 +191,15 @@ struct SearchResultsView: View {
                     // Either mode is map or list
                     if mode == .map {
                         SitesMapPane(
-                            sites: vm.sites,
-                            selectedSiteForModal: $selectedSiteForModal,
-                            center: CLLocationCoordinate2D(
-                                  latitude: vm.currentLat,
-                                  longitude: vm.currentLon
-                               ),
-                               radiusMiles: vm.currentRadiusMiles
+                           sites: vm.sites,
+                           activeSheet: $activeSheet,
+                           center: centerCoordinate,
+                           radiusMiles: vm.currentRadiusMiles,
+                           onMapTap: {
+                                 isSearchFocused = false   // dismiss keyboard
+                              }
                         )
+                        
                     } else {
                         SitesListPane(
                             sites: vm.sites,
