@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct PlentifoodApp: App {
     @StateObject private var vm = NearbySitesViewModel()
+//    @EnvironmentObject var vm: NearbySitesViewModel
 
     
     init() {

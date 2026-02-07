@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     var body: some View {
-            VStack  {
+        VStack(spacing: 12)  {
                 Image("logo")
                     .resizable()
                     .scaledToFit()
@@ -21,10 +21,13 @@ struct WelcomeView: View {
                 Text("Welcome to the \nPlentiFood")
                     .font(.largeTitle).bold()
                     .multilineTextAlignment(.center)
-                
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+
                 Image("salad-basket")
-                    .imageScale(.large)
-                    .foregroundStyle(.tint)
+                    .resizable()
+                    .scaledToFit()
+//                    .frame(minWidth: 220)
                 
                 NavigationLink {
                     SearchResultsView()

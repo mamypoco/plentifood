@@ -8,19 +8,44 @@
 import SwiftUI
 
 struct DashboardHeader: View {
-   var body: some View {
-      HStack(spacing: 8) {
-         Image(systemName: "house.fill")
-            .foregroundColor(.orange)
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        HStack(spacing: 10) {
+            
+            Button {
+                dismiss()
 
-         Text("Dashboard")
-            .font(.title)
-            .fontWeight(.bold)
-            .foregroundColor(.orange)
-
-         Spacer()
-      }
-   }
+            } label: {
+                Image(systemName: "house.fill")
+                    .font(.title)
+                // .foregroundColor(.orange)
+            }
+            .buttonStyle(.plain)
+            
+            Text("Dashboard")
+                .font(.title)
+                .fontWeight(.bold)
+//                .foregroundColor(.orange)
+            Spacer()
+            // Right side: Logout
+            Button {
+                AdminSessionStore.clear()
+                dismiss()
+                
+            } label: {
+                Text("Logout")
+                    .font(.body)
+                    .foregroundStyle(Color(.label))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color(.systemGray6))
+                    .clipShape(Capsule())
+            }
+//            .buttonStyle(.plain)
+        }
+    }
 }
 
 

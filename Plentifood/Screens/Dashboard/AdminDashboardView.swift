@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AdminDashboardView: View {
     
+//    @Environment(\.dismiss) private var dismiss
+    
     let adminName: String
 
     @State private var organization: OrganizationInfo = OrganizationInfo(name: "Loading...", type: "Loading...")
@@ -24,7 +26,6 @@ struct AdminDashboardView: View {
              VStack(alignment: .leading, spacing: 20) {
                 DashboardHeader()
                 GreetingView(name: adminName)
-
                 OrganizationCard(org: organization)
                 SitesSection(sites: sites)
              }
