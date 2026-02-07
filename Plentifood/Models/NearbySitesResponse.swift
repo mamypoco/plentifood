@@ -58,8 +58,6 @@ struct Site: Codable, Identifiable, Hashable {
    let status: String?
     
     
-
-
    // MARK: - Computed helpers
 
    var coordinate: CLLocationCoordinate2D {
@@ -82,6 +80,26 @@ struct Site: Codable, Identifiable, Hashable {
 
 
 // MARK: - Computed helpers / formatting
+
+extension Site {
+   var servicesDisplayText: String {
+      guard !services.isEmpty else { return "Services not listed" }
+
+      return services
+         .map { $0.displayName }          // uses Service.displayName below
+         .joined(separator: " · ")
+   }
+}
+
+extension Service {
+   var displayName: String {
+      name
+         .replacingOccurrences(of: "_", with: " ")
+         .replacingOccurrences(of: "-", with: " ")
+         .capitalized
+   }
+}
+
 extension Site {
    func hoursForDay(_ day: String) -> String {
       guard let entries = hours?[day], !entries.isEmpty else {

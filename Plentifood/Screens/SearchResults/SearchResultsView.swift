@@ -36,7 +36,7 @@ struct SearchResultsView: View {
     @EnvironmentObject var vm: NearbySitesViewModel
     @State private var mode: Mode = .map
     @State private var selectedSiteForModal: Site? // map only
-    @State private var selectedSiteForSheet: Site?
+//    @State private var selectedSiteForSheet: Site?
     
     // Search bar
     @State private var searchText = ""
@@ -203,7 +203,7 @@ struct SearchResultsView: View {
                     } else {
                         SitesListPane(
                             sites: vm.sites,
-                            selectedSiteForSheet: $selectedSiteForSheet
+                            activeSheet: $activeSheet
                         )
                     }
                     
@@ -238,27 +238,37 @@ struct SearchResultsView: View {
                 .sheet(item: $activeSheet) { sheet in
                     switch sheet {
                     case .mini(let site):
-                        SiteDetailModal(site: site) {
-                            activeSheet = .detail(site)
-                        }
+                        
+                        SiteDetailModal(
+                            site: site,
+                            onDetails: {activeSheet = .detail(site)}
+                        )
                         .presentationDetents([.height(140)])
                         
                     case .detail(let site):
                         SiteDetailSheet(site: site)
                             .presentationDetents([.medium, .large])
+                            .presentationDragIndicator(.visible)
+                                .alert("Error", isPresented: .constant(vm.errorMessage != nil)) {
+                                    Button("OK") { vm.errorMessage = nil }
+                                } message: {
+                                    Text(vm.errorMessage ?? "")
+                                }
                     }
                 }
-                .sheet(item: $selectedSiteForSheet) { site in
-                    SiteDetailSheet(site: site)
-                        .presentationDetents([.medium, .large])
-                        .presentationDragIndicator(.visible)
-                    
-                        .alert("Error", isPresented: .constant(vm.errorMessage != nil)) {
-                            Button("OK") { vm.errorMessage = nil }
-                        } message: {
-                            Text(vm.errorMessage ?? "")
-                        }
-                }
+        
+        
+//                .sheet(item: $selectedSiteForSheet) { site in
+//                    SiteDetailSheet(site: site)
+//                        .presentationDetents([.medium, .large])
+//                        .presentationDragIndicator(.visible)
+//                    
+//                        .alert("Error", isPresented: .constant(vm.errorMessage != nil)) {
+//                            Button("OK") { vm.errorMessage = nil }
+//                        } message: {
+//                            Text(vm.errorMessage ?? "")
+//                        }
+//                }
             
         }
         

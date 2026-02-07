@@ -11,14 +11,16 @@ import SwiftUI
 
 struct SitesListPane: View {
     let sites: [Site]
-    @Binding var selectedSiteForSheet: Site?
+//    @Binding var selectedSiteForSheet: Site?
+    @Binding var activeSheet: SearchResultsView.ActiveSheet?
     
     var body: some View {
           List(sites) { site in
              Button {
-                selectedSiteForSheet = site
+                 activeSheet = .detail(site)
              } label: {
-                 SiteRowCard(site: site, secondaryLine: .phone)
+//                 SiteRowCard(site: site, secondaryLine: .phone)
+                 UnifiedSiteCard(site: site)
              }
              .buttonStyle(.plain)
           }
@@ -27,14 +29,14 @@ struct SitesListPane: View {
 }
 
 struct SiteRowCard: View {
-    enum SecondaryLine {
-        case phone
-        case none
-    }
-    
+//    enum SecondaryLine {
+//       case address
+//       case phone
+//       case none
+//    }
     
     let site: Site
-    var secondaryLine: SecondaryLine = .none
+//    var secondaryLine: SecondaryLine = .none
     
     var body: some View {
         HStack(spacing: 12) {
@@ -55,11 +57,9 @@ struct SiteRowCard: View {
                     .foregroundStyle(.primary.opacity(0.75)) //keep the fonts show
                     .lineLimit(2)
                 
-                if secondaryLine == .phone, let phone = site.phone, !phone.isEmpty {
-                    Text(phone)
-                        .font(.subheadline)
-                        .foregroundStyle(.primary.opacity(0.75)) //keep the fonts show
-                }
+                Text(site.servicesDisplayText)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 
 
                 
@@ -80,7 +80,7 @@ struct SiteRowCard: View {
 //    }
     
     private struct SitesListPanePreviewWrapper: View {
-       @State private var selectedSiteForSheet: Site? = nil
+        @State private var activeSheet: SearchResultsView.ActiveSheet? = nil
 
        private let sampleSites: [Site] = [
           Site(
@@ -114,7 +114,7 @@ struct SiteRowCard: View {
        var body: some View {
           SitesListPane(
              sites: sampleSites,
-             selectedSiteForSheet: $selectedSiteForSheet
+             activeSheet: $activeSheet
           )
        }
     }
