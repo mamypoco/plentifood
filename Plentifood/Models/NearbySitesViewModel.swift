@@ -33,8 +33,22 @@ final class NearbySitesViewModel: ObservableObject {
     @Published var currentRadiusMiles: Double = defaultRadiusMiles
    
     
-    private let api = PlentiFoodAPI()
-    private let geocoder = CLGeocoder()
+    // For Testing
+    private let api: PlentiFoodAPIProtocol
+    private let geocoder: GeocodingProtocol
+    
+    // Convenience init used by the real app
+    init() {
+      self.api = PlentiFoodAPI()
+      self.geocoder = CLGeocoder()
+    }
+
+    // Designated init used by tests (inject mocks)
+   init(api: PlentiFoodAPIProtocol, geocoder: GeocodingProtocol) {
+      self.api = api
+      self.geocoder = geocoder
+   }
+    
     
     func load() async {
        await load(
@@ -54,10 +68,12 @@ final class NearbySitesViewModel: ObservableObject {
             
             totalResults = response.total_results
             sites = response.results
-            print("sites.count after assign:", sites.count)
+            
         } catch {
-            print("API error:", error)
             errorMessage = "\(error)"
+            // clear results on error
+            sites = []
+            totalResults = 0
         }
         
         isLoading = false
@@ -78,7 +94,6 @@ final class NearbySitesViewModel: ObservableObject {
             
             guard let coordinate = placemarks.first?.location?.coordinate else {
                 errorMessage = "Location not found."
-                print("❌ No coordinate from placemark")
                 isLoading = false
                 return
             }
@@ -93,7 +108,6 @@ final class NearbySitesViewModel: ObservableObject {
 //            await load(lat: coordinate.latitude, lon: coordinate.longitude, radiusMiles: radiusMiles)
             
         } catch {
-            print("❌ geocode error:", error)
             errorMessage = "Could not find that location."
             isLoading = false
         }

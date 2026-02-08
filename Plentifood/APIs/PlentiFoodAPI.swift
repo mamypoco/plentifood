@@ -35,6 +35,7 @@ struct APIErrorResponse: Codable {
 }
 
 
+
 // API Client //
 final class PlentiFoodAPI {
     private let baseURL = "https://plentifood-api.onrender.com"
@@ -128,21 +129,7 @@ final class PlentiFoodAPI {
         return try decoder.decode(OrganizationDetailDTO.self, from: data)
     }
 
-//    func fetchSitesForOrganization(orgId: Int) async throws -> [OrgSiteDTO] {
-//       guard let url = URL(string: baseURL + "/organizations/\(orgId)/sites")
-//       else { throw APIError.badURL }
-//
-//       let (data, response) = try await URLSession.shared.data(from: url)
-//
-//       if let http = response as? HTTPURLResponse,
-//          !(200...299).contains(http.statusCode) {
-//          throw APIError.badResponse(http.statusCode)
-//       }
-//
-//       return try JSONDecoder().decode([OrgSiteDTO].self, from: data)
-//    }
-
-
 }
+
 
 

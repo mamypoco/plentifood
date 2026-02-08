@@ -6,9 +6,38 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		3889A0BF2F390A9D00E8745E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38899CC12F2B0B6D00E8745E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38899CC82F2B0B6D00E8745E;
+			remoteInfo = Plentifood;
+		};
+		3889A0D62F390AC400E8745E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38899CC12F2B0B6D00E8745E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38899CC82F2B0B6D00E8745E;
+			remoteInfo = Plentifood;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		38899CC92F2B0B6D00E8745E /* Plentifood.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Plentifood.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3889A0BB2F390A9D00E8745E /* PlentifoodTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlentifoodTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3889A0D02F390AC400E8745E /* PlentifoodUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlentifoodUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3889A1552F3936DA00E8745E /* Exceptions for "PlentifoodTests" folder in "PlentifoodTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				PlentifoodTestsLaunchTests.swift,
+			);
+			target = 3889A0BA2F390A9D00E8745E /* PlentifoodTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		38899CCB2F2B0B6D00E8745E /* Plentifood */ = {
@@ -16,10 +45,37 @@
 			path = Plentifood;
 			sourceTree = "<group>";
 		};
+		3889A0BC2F390A9D00E8745E /* PlentifoodTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3889A1552F3936DA00E8745E /* Exceptions for "PlentifoodTests" folder in "PlentifoodTests" target */,
+			);
+			path = PlentifoodTests;
+			sourceTree = "<group>";
+		};
+		3889A0D12F390AC400E8745E /* PlentifoodUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PlentifoodUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		38899CC62F2B0B6D00E8745E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3889A0B82F390A9D00E8745E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3889A0CD2F390AC400E8745E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +89,8 @@
 			isa = PBXGroup;
 			children = (
 				38899CCB2F2B0B6D00E8745E /* Plentifood */,
+				3889A0BC2F390A9D00E8745E /* PlentifoodTests */,
+				3889A0D12F390AC400E8745E /* PlentifoodUITests */,
 				38899CCA2F2B0B6D00E8745E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +99,8 @@
 			isa = PBXGroup;
 			children = (
 				38899CC92F2B0B6D00E8745E /* Plentifood.app */,
+				3889A0BB2F390A9D00E8745E /* PlentifoodTests.xctest */,
+				3889A0D02F390AC400E8745E /* PlentifoodUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +130,52 @@
 			productReference = 38899CC92F2B0B6D00E8745E /* Plentifood.app */;
 			productType = "com.apple.product-type.application";
 		};
+		3889A0BA2F390A9D00E8745E /* PlentifoodTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3889A0C12F390A9D00E8745E /* Build configuration list for PBXNativeTarget "PlentifoodTests" */;
+			buildPhases = (
+				3889A0B72F390A9D00E8745E /* Sources */,
+				3889A0B82F390A9D00E8745E /* Frameworks */,
+				3889A0B92F390A9D00E8745E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3889A0C02F390A9D00E8745E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3889A0BC2F390A9D00E8745E /* PlentifoodTests */,
+			);
+			name = PlentifoodTests;
+			packageProductDependencies = (
+			);
+			productName = PlentifoodTests;
+			productReference = 3889A0BB2F390A9D00E8745E /* PlentifoodTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3889A0CF2F390AC400E8745E /* PlentifoodUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3889A0D82F390AC400E8745E /* Build configuration list for PBXNativeTarget "PlentifoodUITests" */;
+			buildPhases = (
+				3889A0CC2F390AC400E8745E /* Sources */,
+				3889A0CD2F390AC400E8745E /* Frameworks */,
+				3889A0CE2F390AC400E8745E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3889A0D72F390AC400E8745E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3889A0D12F390AC400E8745E /* PlentifoodUITests */,
+			);
+			name = PlentifoodUITests;
+			packageProductDependencies = (
+			);
+			productName = PlentifoodUITests;
+			productReference = 3889A0D02F390AC400E8745E /* PlentifoodUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -82,6 +188,14 @@
 				TargetAttributes = {
 					38899CC82F2B0B6D00E8745E = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					3889A0BA2F390A9D00E8745E = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 38899CC82F2B0B6D00E8745E;
+					};
+					3889A0CF2F390AC400E8745E = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 38899CC82F2B0B6D00E8745E;
 					};
 				};
 			};
@@ -100,12 +214,28 @@
 			projectRoot = "";
 			targets = (
 				38899CC82F2B0B6D00E8745E /* Plentifood */,
+				3889A0BA2F390A9D00E8745E /* PlentifoodTests */,
+				3889A0CF2F390AC400E8745E /* PlentifoodUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		38899CC72F2B0B6D00E8745E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3889A0B92F390A9D00E8745E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3889A0CE2F390AC400E8745E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +252,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3889A0B72F390A9D00E8745E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3889A0CC2F390AC400E8745E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3889A0C02F390A9D00E8745E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 38899CC82F2B0B6D00E8745E /* Plentifood */;
+			targetProxy = 3889A0BF2F390A9D00E8745E /* PBXContainerItemProxy */;
+		};
+		3889A0D72F390AC400E8745E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 38899CC82F2B0B6D00E8745E /* Plentifood */;
+			targetProxy = 3889A0D62F390AC400E8745E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		38899CD22F2B0B6F00E8745E /* Debug */ = {
@@ -312,6 +469,94 @@
 			};
 			name = Release;
 		};
+		3889A0C22F390A9D00E8745E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_LINK_OBJC_RUNTIME = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3ASQ7AY837;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mamypoco.PlentifoodTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Plentifood.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Plentifood";
+			};
+			name = Debug;
+		};
+		3889A0C32F390A9D00E8745E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_LINK_OBJC_RUNTIME = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3ASQ7AY837;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mamypoco.PlentifoodTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Plentifood.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Plentifood";
+			};
+			name = Release;
+		};
+		3889A0D92F390AC400E8745E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3ASQ7AY837;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mamypoco.PlentifoodUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Plentifood;
+			};
+			name = Debug;
+		};
+		3889A0DA2F390AC400E8745E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3ASQ7AY837;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mamypoco.PlentifoodUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Plentifood;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -329,6 +574,24 @@
 			buildConfigurations = (
 				38899CD52F2B0B6F00E8745E /* Debug */,
 				38899CD62F2B0B6F00E8745E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3889A0C12F390A9D00E8745E /* Build configuration list for PBXNativeTarget "PlentifoodTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3889A0C22F390A9D00E8745E /* Debug */,
+				3889A0C32F390A9D00E8745E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3889A0D82F390AC400E8745E /* Build configuration list for PBXNativeTarget "PlentifoodUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3889A0D92F390AC400E8745E /* Debug */,
+				3889A0DA2F390AC400E8745E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
