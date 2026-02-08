@@ -10,8 +10,8 @@ import SwiftUI
 // List pane (cards from real API) //
 
 struct SitesListPane: View {
+    
     let sites: [Site]
-//    @Binding var selectedSiteForSheet: Site?
     @Binding var activeSheet: SearchResultsView.ActiveSheet?
     
     var body: some View {
@@ -19,66 +19,23 @@ struct SitesListPane: View {
              Button {
                  activeSheet = .detail(site)
              } label: {
-//                 SiteRowCard(site: site, secondaryLine: .phone)
                  UnifiedSiteCard(site: site)
+                     .siteCardContainer()
              }
              .buttonStyle(.plain)
+             .listRowSeparator(.hidden) // ✅ removes straight line
+             .listRowBackground(Color.clear) // ✅ prevents bleed-through
+             .listRowInsets(
+                 EdgeInsets(top: 6, leading: 16, bottom: 6, trailing:16)
+            )
           }
           .listStyle(.plain)
+          .scrollContentBackground(.hidden)
     }
 }
 
-struct SiteRowCard: View {
-//    enum SecondaryLine {
-//       case address
-//       case phone
-//       case none
-//    }
-    
-    let site: Site
-//    var secondaryLine: SecondaryLine = .none
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            
-            Image(site.listIconAssetName)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 70, height: 70)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-            
-            VStack(alignment: .leading, spacing: 6) {
-                Text(site.name)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
-                
-                Text(site.shortAddress)
-                    .font(.subheadline)
-                    .foregroundStyle(.primary.opacity(0.75)) //keep the fonts show
-                    .lineLimit(2)
-                
-                Text(site.servicesDisplayText)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                
 
-                
-            }
-            .padding(12)
-            //        .background(.background)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(radius: 2)
-        }
-    }
-}
-    
-//    #Preview {
-//        SitesListPane(
-//            sites: vm.sites,
-//            selectedSite: $selectedSite
-//        )
-//    }
-    
+
     private struct SitesListPanePreviewWrapper: View {
         @State private var activeSheet: SearchResultsView.ActiveSheet? = nil
 

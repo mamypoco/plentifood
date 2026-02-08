@@ -36,7 +36,6 @@ struct SearchResultsView: View {
     @EnvironmentObject var vm: NearbySitesViewModel
     @State private var mode: Mode = .map
     @State private var selectedSiteForModal: Site? // map only
-//    @State private var selectedSiteForSheet: Site?
     
     // Search bar
     @State private var searchText = ""
@@ -256,19 +255,6 @@ struct SearchResultsView: View {
                                 }
                     }
                 }
-        
-        
-//                .sheet(item: $selectedSiteForSheet) { site in
-//                    SiteDetailSheet(site: site)
-//                        .presentationDetents([.medium, .large])
-//                        .presentationDragIndicator(.visible)
-//                    
-//                        .alert("Error", isPresented: .constant(vm.errorMessage != nil)) {
-//                            Button("OK") { vm.errorMessage = nil }
-//                        } message: {
-//                            Text(vm.errorMessage ?? "")
-//                        }
-//                }
             
         }
         

@@ -14,10 +14,12 @@ struct AdminDashboardView: View {
     let adminName: String
 
     @State private var organization: OrganizationInfo = OrganizationInfo(name: "Loading...", type: "Loading...")
-    @State private var sites: [SiteInfo] = []
+    @State private var sites: [Site] = []
     @State private var isLoading = true
     @State private var errorMessage: String?
 //   let data: AdminDashboardData
+    @State private var activeSheet: SearchResultsView.ActiveSheet? = nil
+
     
     private let api = PlentiFoodAPI()
 
@@ -27,7 +29,10 @@ struct AdminDashboardView: View {
                 DashboardHeader()
                 GreetingView(name: adminName)
                 OrganizationCard(org: organization)
-                SitesSection(sites: sites)
+                SitesSection(sites: sites) { site in
+                    activeSheet = .detail(site)
+                }
+
              }
              .padding()
           }
@@ -37,6 +42,22 @@ struct AdminDashboardView: View {
           .overlay {
              if isLoading { ProgressView() }
           }
+          .sheet(item: $activeSheet) { sheet in
+              switch sheet {
+              case .mini(let site):
+                  SiteDetailModal(
+                      site: site,
+                      onDetails: { activeSheet = .detail(site) }
+                  )
+                  .presentationDetents([.height(140)])
+
+              case .detail(let site):
+                  SiteDetailSheet(site: site)
+                      .presentationDetents([.medium, .large])
+                      .presentationDragIndicator(.visible)
+              }
+          }
+
           .alert("Error", isPresented: Binding(
              get: { errorMessage != nil },
              set: { _ in errorMessage = nil }
@@ -60,7 +81,9 @@ struct AdminDashboardView: View {
           do {
              // Fetch org
               let orgDetail = try await api.fetchOrganization(orgId: orgId)
-              sites = orgDetail.sites.map { SiteInfo(dto: $0) } 
+//              sites = orgDetail.sites.map { SiteInfo(dto: $0) }
+              sites = orgDetail.sites
+
               
               organization = OrganizationInfo(dto: orgDetail)
 
