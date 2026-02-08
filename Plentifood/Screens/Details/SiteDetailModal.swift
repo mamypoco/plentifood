@@ -14,7 +14,7 @@ struct SiteDetailModal: View {
     var body: some View {
         // reuse the siteRowCard
         ZStack {
-            SiteRowCard(site: site, secondaryLine: .phone)
+            UnifiedSiteCard(site: site)
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(12) // make it feel like a card

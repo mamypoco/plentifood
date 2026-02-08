@@ -18,7 +18,7 @@ struct OrganizationCard: View {
 
          VStack(alignment: .leading, spacing: 6) {
             Text("Name: \(org.name)")
-            Text("Type: \(org.type)")
+             Text("Type: \(org.type.displayLabel)")
          }
          .padding()
          .frame(maxWidth: .infinity, alignment: .leading)
