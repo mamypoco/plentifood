@@ -17,7 +17,7 @@ struct AdminDashboardView: View {
     @State private var sites: [Site] = []
     @State private var isLoading = true
     @State private var errorMessage: String?
-//   let data: AdminDashboardData
+    @State private var showAddSite = false
     @State private var activeSheet: SearchResultsView.ActiveSheet? = nil
 
     
@@ -29,9 +29,18 @@ struct AdminDashboardView: View {
                 DashboardHeader()
                 GreetingView(name: adminName)
                 OrganizationCard(org: organization)
-                SitesSection(sites: sites) { site in
-                    activeSheet = .detail(site)
-                }
+//                SitesSection(sites: sites) { site in
+//                    activeSheet = .detail(site)
+//                }
+                SitesSection(
+                     sites: sites,
+                     onTapSite: { site in
+                         activeSheet = .detail(site)
+                     },
+                     onAddSite: {
+                         showAddSite = true
+                     }
+                 )
 
              }
              .padding()
@@ -57,6 +66,15 @@ struct AdminDashboardView: View {
                       .presentationDragIndicator(.visible)
               }
           }
+          .sheet(isPresented: $showAddSite) {
+              AddSiteView(
+                  onDone: {
+                      showAddSite = false
+                      Task { await loadDashboard() }
+                  }
+              )
+          }
+
 
           .alert("Error", isPresented: Binding(
              get: { errorMessage != nil },
