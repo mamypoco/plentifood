@@ -8,15 +8,35 @@
 import SwiftUI
 
 struct SitesSection: View {
+    
     let sites: [Site]
     let onTapSite: (Site) -> Void
+    let onAddSite: () -> Void
     
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Sites:")
-                .font(.headline)
-                .foregroundColor(.orange)
+//            Text("Sites:")
+//                .font(.headline)
+//                .foregroundColor(.orange)
+            HStack {
+                Text("Sites:")
+                    .font(.headline)
+                    .foregroundColor(.orange)
+
+                Spacer()
             
+                // Plus Icon to add site
+                Button {
+                    onAddSite()
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title3)
+                }
+                .tint(.orange)
+                .accessibilityLabel("Add site")
+            }
+
             ForEach(sites) { site in
                 Button {
                     onTapSite(site)
@@ -60,7 +80,8 @@ struct SitesSection: View {
                     status: "open"
                 )
             ],
-            onTapSite: { _ in }
+            onTapSite: { _ in },
+            onAddSite: { }
         )
         .padding()
     }

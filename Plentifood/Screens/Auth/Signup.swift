@@ -10,8 +10,61 @@ import SwiftUI
 struct SignUp: View {
     @State private var username = ""
     @State private var orgName = ""
-    @State private var website = ""
+    @State private var websiteUrl = ""
     @State private var orgType: OrgType? = nil //set to null
+    @State private var isSubmitting = false
+    @State private var errorMessage: String? = nil
+    @State private var goToDashboard = false
+
+    
+    private let api = PlentiFoodAPI()
+    
+    @State private var dashboardAdminName = ""
+
+    
+    @MainActor
+    private func submitRegistration() async {
+        print("submitRegistration() started")
+
+       isSubmitting = true
+       errorMessage = nil
+       defer { isSubmitting = false }
+
+       guard let orgType else {
+           print("STOP: orgType is nil")
+          errorMessage = "Please select an organization type."
+          return
+       }
+        print("Validation passed, calling API...")
+
+       do {
+          let response = try await api.registerAdminWithOrganization(
+             username: username,
+             orgName: orgName,
+             orgTypeRaw: orgType.rawValue,
+             websiteUrl: websiteUrl
+          )
+           print("API success. orgId:", response.adminUser.organizationId)
+           
+           dashboardAdminName = response.adminUser.username
+
+           AdminSessionStore.save(
+              userId: response.adminUser.id,
+              username: response.adminUser.username,
+              organizationId: response.adminUser.organizationId
+           )
+           print("Saved session. Setting goToDashboard = true")
+           goToDashboard = true
+
+       } catch {
+//           print("STOP: API failed:", error.localizedDescription)
+//           errorMessage = error.localizedDescription
+           print("STOP: API failed:", error)
+           errorMessage = String(describing: error)
+          
+       }
+    }
+
     
      
     var body: some View {
@@ -45,12 +98,15 @@ struct SignUp: View {
                 UnderlineFieldRow(
                     systemImage: "globe",
                         placeholder: "Website",
-                        text: $website
+                        text: $websiteUrl
                         )
                         .keyboardType(.URL)
                         .textInputAutocapitalization(.never)
 
                         OrgTypeRow(selection: $orgType)
+//                        Text("DEBUG orgType: \(orgType?.rawValue ?? "nil")")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
                      }
                      .padding(.horizontal, 28)
 
@@ -58,6 +114,8 @@ struct SignUp: View {
                      VStack(spacing: 12) {
                         Button("Register") {
                            // TODO: validate + submit
+                            print("Register button tapped")
+                            Task { await submitRegistration()}
                         }
                         .buttonStyle(PrimaryOrangeButton())
 
@@ -76,30 +134,13 @@ struct SignUp: View {
 
                      Spacer()
                   }
-               }
-            }
+                    .navigationDestination(isPresented: $goToDashboard) {
+//                        AdminDashboardView(adminName: AdminSessionStore.loadUsername() ?? "Admin")
+                        AdminDashboardView(adminName: dashboardAdminName)
+                    }
+        }
+    }
 
-// MARK: - Models
-//enum OrgType: String, CaseIterable, Identifiable, Codable {
-//   case foodBank = "food_bank"
-//   case church = "church"
-//   case communityCenter = "community_center"
-//   case nonProfit = "non_profit"
-//   case others = "others"
-//
-//   var id: String { rawValue }
-//
-//   // What the user sees in the dropdown
-//   var displayName: String {
-//      switch self {
-//      case .foodBank: return "Food bank"
-//      case .church: return "Church"
-//      case .communityCenter: return "Community center"
-//      case .nonProfit: return "Non-profit"
-//      case .others: return "Others"
-//      }
-//   }
-//}
 
 // Picker Row (dropdown)
 struct OrgTypeRow: View {
