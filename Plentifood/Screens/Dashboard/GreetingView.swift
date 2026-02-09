@@ -17,8 +17,8 @@ struct GreetingView: View {
       +
       Text(name)
          .font(.title2)
-         .fontWeight(.bold)
-         .foregroundColor(.orange)
+         .fontWeight(.semibold)
+//         .foregroundColor(.orange)
       +
       Text(" !")
          .font(.title2)

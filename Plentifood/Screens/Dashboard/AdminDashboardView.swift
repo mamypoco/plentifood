@@ -81,10 +81,11 @@ struct AdminDashboardView: View {
           do {
              // Fetch org
               let orgDetail = try await api.fetchOrganization(orgId: orgId)
-//              sites = orgDetail.sites.map { SiteInfo(dto: $0) }
-              sites = orgDetail.sites
+//              print("Dashboard loading orgId:", orgId)
+//              print("Org name:", orgDetail.name, "sites:", orgDetail.sites.count)
 
-              
+              sites = orgDetail.sites.map { Site(dto: $0) }
+
               organization = OrganizationInfo(dto: orgDetail)
 
           } catch {

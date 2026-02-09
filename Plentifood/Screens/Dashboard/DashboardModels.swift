@@ -13,58 +13,87 @@ struct OrganizationInfo {
    let type: String
 }
 
-//struct SiteInfo: Identifiable {
-//    let id: Int
-//    let name: String
-//    let serviceType: String
-//    let phone: String?
-//    
-//    let addressLine1: String
-//       let city: String
-//       let state: String
-//       let postalCode: String
-//
-//       var shortAddress: String {
-//          [addressLine1, "\(city), \(state) \(postalCode)"]
-//             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-//             .filter { !$0.isEmpty }
-//             .joined(separator: " ")
-//       }
-//}
 
 // MARK: - API DTOs (match backend JSON)
 
 struct OrganizationDetailDTO: Codable {
+    let id: Int
+    let name: String
+    let organizationType: String
+    let websiteUrl: String?
+//   let sites: [Site]
+    let sites: [SiteDTO]
+    let createdAt: String
+    let updatedAt: String?
+    
+//    enum CodingKeys: String, CodingKey {
+//      case id, name, sites
+//      case organizationType = "organization_type"
+//      case websiteUrl = "website_url"
+//    }
+}
+
+struct SiteDTO: Codable {
    let id: Int
    let name: String
-   let organizationType: String
-   let websiteUrl: String?
-   let sites: [Site]
-    
-    enum CodingKeys: String, CodingKey {
-      case id, name, sites
-      case organizationType = "organization_type"
-      case websiteUrl = "website_url"
-    }
+   let latitude: Double
+   let longitude: Double
+
+   let addressLine1: String?
+   let city: String?
+   let state: String?
+   let postalCode: String?
+   let phone: String?
+
+   let organizationName: String?
+   let organizationType: String?
+   let organizationWebsiteUrl: String?
+
+   let eligibility: String?
+   let services: [ServiceDTO]
+   let serviceNotes: String?
+
+   let hours: HoursByDay?
+   let status: String?
+}
+
+struct ServiceDTO: Codable {
+   let id: Int
+   let name: String
 }
 
 
-//struct OrgSiteDTO: Codable {
-//    let id: Int
-//    let name: String
-//    let phone: String?
-//    let services: [ServiceDTO]?
-//    
-//    let address_line1: String
-//    let city: String
-//    let state: String
-//    let postal_code: String
-//}
 
-//struct ServiceDTO: Codable {
-//   let id: Int
-//   let name: String
-//}
+// Register related
+struct AdminUserDTO: Codable {
+   let id: Int
+   let username: String
+   let organizationId: Int
+   let createdAt: String
+}
+
+struct RegisterResponseDTO: Codable {
+   let adminUser: AdminUserDTO
+   let organization: OrganizationDetailDTO
+}
+
+struct RegisterRequestBody: Codable {
+   let organization: RegisterOrganizationPayload
+   let admin: RegisterAdminPayload
+}
+
+struct RegisterOrganizationPayload: Codable {
+   let name: String
+   let organizationType: String
+   let websiteUrl: String?
+}
+
+struct RegisterAdminPayload: Codable {
+   let username: String
+}
+
+
+
 
 // MARK: - Mapping
 
@@ -75,39 +104,32 @@ extension OrganizationInfo {
    }
 }
 
+extension Site {
+   init(dto: SiteDTO) {
+      self.id = dto.id
+      self.name = dto.name
+      self.latitude = dto.latitude
+      self.longitude = dto.longitude
 
-//extension SiteInfo {
-//    init(dto: OrgSiteDTO) {
-//        self.id = dto.id
-//        self.name = dto.name
-//        self.phone = dto.phone
-//
-//        // Choose display rule: first service
-//        self.serviceType = dto.services?.first?.name ?? "other"
-//       
-//        self.addressLine1 = dto.address_line1
-//        self.city = dto.city
-//        self.state = dto.state
-//        self.postalCode = dto.postal_code
-//   }
-//}
+      self.address_line1 = dto.addressLine1
+      self.city = dto.city
+      self.state = dto.state
+      self.postal_code = dto.postalCode
+      self.phone = dto.phone
+
+      self.organization_name = dto.organizationName
+      self.organization_type = dto.organizationType
+      self.organization_website_url = dto.organizationWebsiteUrl
+
+      self.eligibility = dto.eligibility
+      self.services = dto.services.map { Service(id: $0.id, name: $0.name) }
+      self.service_notes = dto.serviceNotes
+
+      self.hours = dto.hours
+      self.status = dto.status
+   }
+}
 
 
 
-// Mock
-//extension SiteInfo {
-//   static let mocks: [SiteInfo] = [
-//      SiteInfo(
-//         id: 1,
-//         name: "Duwamish River Community Center",
-//         serviceType: "Food Bank",
-//         phone: "(206)-123-4567"
-//      ),
-//      SiteInfo(
-//         id: 2,
-//         name: "South Park Community Center",
-//         serviceType: "Meal",
-//         phone: "(206)-809-9691"
-//      )
-//   ]
-//}
+
