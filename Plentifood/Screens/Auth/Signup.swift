@@ -104,7 +104,7 @@ struct SignUp: View {
                         .textInputAutocapitalization(.never)
 
                         OrgTypeRow(selection: $orgType)
-                        Text("DEBUG orgType: \(orgType?.rawValue ?? "nil")")
+//                        Text("DEBUG orgType: \(orgType?.rawValue ?? "nil")")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                      }

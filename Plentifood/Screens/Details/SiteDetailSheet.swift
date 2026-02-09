@@ -163,39 +163,39 @@ struct SiteDetailSheet: View {
     
     
     
-    #Preview {
-       SiteDetailSheet(
-          site: Site(
-             id: 1,
-             name: "ACRS Food Bank and Meals",
-             latitude: 47.5923,
-             longitude: -122.3294,
-             address_line1: "800 S Weller St",
-             city: "Seattle",
-             state: "WA",
-             postal_code: "98004",
-             phone: "(253)-351-0450",
-             organization_name: "Asian Counseling and Referral Service",
-             organization_type: "food_bank",
-             organization_website_url: "https://acrs.org/",
-             eligibility: "general_public",
-             services: [
-                Service(id: 1, name: "food_bank")
-             ],
-             service_notes: "Numbers are given out at 10:00 AM. Please arrive early.",
-             hours: [
-                "monday": [HoursEntry(open: "10:00", close: "14:00")],
-                "tuesday": [HoursEntry(open: "10:00", close: "14:00")],
-                "wednesday": [],
-                "thursday": [],
-                "friday": [],
-                "saturday": [],
-                "sunday": []
-             ],
-             status: "open"
-          )
-       )
-    }
+//    #Preview {
+//       SiteDetailSheet(
+//          site: Site(
+//             id: 1,
+//             name: "ACRS Food Bank and Meals",
+//             latitude: 47.5923,
+//             longitude: -122.3294,
+//             address_line1: "800 S Weller St",
+//             city: "Seattle",
+//             state: "WA",
+//             postal_code: "98004",
+//             phone: "(253)-351-0450",
+//             organization_name: "Asian Counseling and Referral Service",
+//             organization_type: "food_bank",
+//             organization_website_url: "https://acrs.org/",
+//             eligibility: "general_public",
+//             services: [
+//                Service(id: 1, name: "food_bank")
+//             ],
+//             service_notes: "Numbers are given out at 10:00 AM. Please arrive early.",
+//             hours: [
+//                "monday": [HoursEntry(open: "10:00", close: "14:00")],
+//                "tuesday": [HoursEntry(open: "10:00", close: "14:00")],
+//                "wednesday": [],
+//                "thursday": [],
+//                "friday": [],
+//                "saturday": [],
+//                "sunday": []
+//             ],
+//             status: "open"
+//          )
+//       )
+//    }
 }
 //#Preview {
 //    SiteDetailSheet(site: Site)

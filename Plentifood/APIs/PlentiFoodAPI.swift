@@ -122,8 +122,6 @@ final class PlentiFoodAPI {
           !(200...299).contains(http.statusCode) {
           throw APIError.badResponse(http.statusCode)
        }
-        
-//        print("fetchOrganization raw JSON:", String(data: data, encoding: .utf8) ?? "nil")
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -132,19 +130,22 @@ final class PlentiFoodAPI {
            return try decoder.decode(OrganizationDetailDTO.self, from: data)
         } catch {
            // Keep this print for future debugging; it’s very useful
-           print("fetchOrganization decode error:", error)
+            print("fetchOrganization decode error:", error)
+            if let raw = String(data: data, encoding: .utf8) {
+                  print("fetchOrganization raw JSON:", raw)
+               }
+            
            throw error
         }
-
     }
     
     // Admin registeration
-
     func registerAdminWithOrganization(
         username: String,
         orgName: String,
         orgTypeRaw: String,
         websiteUrl: String?
+        
     ) async throws -> RegisterResponseDTO {
 
         let body = RegisterRequestBody(
@@ -156,7 +157,6 @@ final class PlentiFoodAPI {
           admin: RegisterAdminPayload(username: username)
        )
 
-//        var request = URLRequest(url: baseURL.appendingPathComponent("register"))
         
         guard let url = URL(string: baseURL + "/register") else {
            throw URLError(.badURL)
@@ -192,6 +192,34 @@ final class PlentiFoodAPI {
        }
     }
 
+    // Create site in dashboard
+    func createSite(orgId: Int, body: CreateSiteRequestDTO) async throws {
+       guard let url = URL(string: baseURL + "/organizations/\(orgId)/sites")
+       else { throw APIError.badURL }
+
+       var request = URLRequest(url: url)
+       request.httpMethod = "POST"
+       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+       let encoder = JSONEncoder()
+       encoder.keyEncodingStrategy = .convertToSnakeCase
+       request.httpBody = try encoder.encode(body)
+
+//       let (_, response) = try await URLSession.shared.data(for: request)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        if let http = response as? HTTPURLResponse,
+              !(200...299).contains(http.statusCode) {
+
+              // 👇 Print Flask error body like {"details":"..."}
+              if let text = String(data: data, encoding: .utf8) {
+                 print("createSite error body:", text)
+              }
+
+              throw APIError.badResponse(http.statusCode)
+           }
+    }
 
 }
 

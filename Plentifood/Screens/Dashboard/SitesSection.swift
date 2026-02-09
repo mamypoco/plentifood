@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct SitesSection: View {
+    
     let sites: [Site]
     let onTapSite: (Site) -> Void
     let onAddSite: () -> Void
     
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
 //            Text("Sites:")
@@ -23,7 +25,8 @@ struct SitesSection: View {
                     .foregroundColor(.orange)
 
                 Spacer()
-
+            
+                // Plus Icon to add site
                 Button {
                     onAddSite()
                 } label: {

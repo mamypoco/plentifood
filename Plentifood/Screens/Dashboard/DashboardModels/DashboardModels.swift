@@ -25,12 +25,6 @@ struct OrganizationDetailDTO: Codable {
     let sites: [SiteDTO]
     let createdAt: String
     let updatedAt: String?
-    
-//    enum CodingKeys: String, CodingKey {
-//      case id, name, sites
-//      case organizationType = "organization_type"
-//      case websiteUrl = "website_url"
-//    }
 }
 
 struct SiteDTO: Codable {
@@ -90,6 +84,30 @@ struct RegisterOrganizationPayload: Codable {
 
 struct RegisterAdminPayload: Codable {
    let username: String
+}
+
+
+// Create Site related
+
+struct CreateSiteRequestDTO: Codable {
+   let name: String
+   let addressLine1: String
+   let addressLine2: String?
+   let city: String
+   let state: String
+   let postalCode: String
+   let phone: String
+   let eligibility: String
+
+   // Backend requires all 7 days as keys (sunday..saturday)
+   let hours: [String: [String: String]]
+
+   let serviceNotes: String
+   let services: [String]
+
+   // Optional: backend will geocode if missing
+   let latitude: Double?
+   let longitude: Double?
 }
 
 

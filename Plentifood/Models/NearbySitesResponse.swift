@@ -24,7 +24,13 @@ struct HoursEntry: Codable, Hashable {
    let close: String
 }
 
-typealias HoursByDay = [String: [HoursEntry]]
+//typealias HoursByDay = [String: [HoursRangeDTO]]
+typealias HoursByDay = [String: HoursRangeDTO]
+
+struct HoursRangeDTO: Codable, Hashable {
+   let from: String?
+   let to: String?
+}
 
 
 let weekdayOrder = [
@@ -102,15 +108,18 @@ extension Service {
 
 extension Site {
    func hoursForDay(_ day: String) -> String {
-      guard let entries = hours?[day], !entries.isEmpty else {
+      guard let range = hours?[day] else {
          return "Closed"
       }
 
-      return entries
-         .map { "\($0.open) – \($0.close)" }
-         .joined(separator: ", ")
+      if let from = range.from, let to = range.to {
+         return "\(from) – \(to)"
+      } else {
+         return "Closed"
+      }
    }
 }
+
 
 // MARK: - Convenience initializers & samples
 // Keeps older call sites working after adding new API fields.
