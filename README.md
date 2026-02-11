@@ -3,69 +3,58 @@
 - [Backend repo](https://github.com/trimakichan/plentifood-api) 
 - [Backend hosted](https://plentifood-api.onrender.com/)
 
-### Development environment
+## Features
+
+*   Feature 1: A user can find site location using Map/List toggle.
+*   Feature 2: A user can filter sites based on days, organization type, service type, and radius miles. 
+*   Feature 3: A user can seach based on a location name.
+*   Feature 4: Admin user can view their organization and sites details.
+*   Feature 5: Admin user can create organization and sites under a organization. 
+*   Feature 6: Admin user can delete their sites.
+
+## Instructions for setting up the app
+
+1. Clone this repository.
+2. Open the project PlentiFood.xcodeproj.
+3. If neede, update API base URL:
+   - Navigate to PlentiFood/API/PlentiFoodAPI.swift.
+   - Ensure baseURL matches your backend deployment.
+     
+4. Select a simulator and press ⌘R to run.
+
+## Development environment
 
 - Swift Verstion: Swift 6.2.3 
 - Xcode version: Version 26.2 (17C52)
 - iOS Deployment target:　18.6　（downgraded to run SE 2nd gen device)
 - Mac version used: macOS Squoia (ver 15.6.1)
 
-### Tech Stack
+## Tech Stack
 - Swift 5
 - SwiftUI
 - MapKit
-
-
-## Features
-
-*   Feature 1: A brief explanation of the feature.
-*   Feature 2: Another great feature.
-*   Feature 3: And so on.
+  
 
 ## Requirements
 
 List the necessary build and runtime requirements.
 
-*   Xcode `[version]` or later
-*   iOS `[deployment target]` or later
-*   Swift `[version]` or later
-
-## Instructions for setting up the app
-
-Detail how a user can get the project running locally. This often involves dependency management steps.
-
-### [CocoaPods](https://cocoapods.org)
-
-1.  Add the following to your `Podfile`:
-    ```ruby
-    pod 'DependencyName', '~> 1.0.0'
-    ```
-2.  Run `pod install` in your terminal.
-3.  Open the generated `.xcworkspace` file in Xcode.
-
-### [Swift Package Manager (SPM)](https://swift.org)
-
-1.  In Xcode, select **File** > **Add Packages**.
-2.  Enter the repository URL for the dependency.
-
-*(Modify the above sections to match your project's specific dependency manager, such as [Carthage](https://github.com) or manual setup).*
+*   Xcode `16.0` or later
+*   iOS `18.6` or later
+*   Swift `5` or later
 
 ## Configuration
 
-If the project requires specific configuration, such as API keys or entitlements (e.g., iCloud capabilities, push notifications), explain those steps here.
+I used iOS Deployment target:　18.6 to meet SE 2nd gen. You can still run the latest iphone 17. 
 
-*   **API Keys**: In `ApplicationConstants.swift`, replace `ENTER_CLIENT_ID` with your actual client ID:
-    ```swift
-    static let clientId = "YOUR_CLIENT_ID"
-    ```
+## Testing
 
-## Usage
+Files located at:
+- PentifoodTests
+- PlentifoodUITests
+Press ⌘U to run
 
-Provide code snippets or step-by-step instructions on how to use your project or integrate it into another application.
+I used `App/Dependencies.swift` to create protocol for test setup.
 
-```swift
-import ProjectName
 
-// Example of how to use a primary class or function
-let exampleManager = ExampleManager()
-exampleManager.start()
+
