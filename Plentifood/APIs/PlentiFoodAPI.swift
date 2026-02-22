@@ -47,6 +47,7 @@ final class PlentiFoodAPI {
         filters: SearchFilters
         
     ) async throws -> NearbySitesResponse {
+//        print("fetchNearbySites called")   // FIRST LINE
         
         var components = URLComponents(string: baseURL + "/sites/nearby")
         
@@ -74,12 +75,15 @@ final class PlentiFoodAPI {
         components?.queryItems = items
             
         guard let url = components?.url else { throw APIError.badURL }
+        
+//        print("➡️ Request URL:", url.absoluteString)
     
         let (data, response) = try await URLSession.shared.data(from: url)
         
         if let http = response as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
             throw APIError.badResponse(http.statusCode)
         }
+        
         return try JSONDecoder().decode(NearbySitesResponse.self, from: data)
     }
     
@@ -193,7 +197,7 @@ final class PlentiFoodAPI {
     }
 
     // Create site in dashboard
-    func createSite(orgId: Int, body: CreateSiteRequestDTO) async throws {
+    func createSite(orgId: Int, body: CreateSiteRequestDTO) async throws -> SiteDTO {
        guard let url = URL(string: baseURL + "/organizations/\(orgId)/sites")
        else { throw APIError.badURL }
 
@@ -204,21 +208,21 @@ final class PlentiFoodAPI {
        let encoder = JSONEncoder()
        encoder.keyEncodingStrategy = .convertToSnakeCase
        request.httpBody = try encoder.encode(body)
-
-//       let (_, response) = try await URLSession.shared.data(for: request)
         
         let (data, response) = try await URLSession.shared.data(for: request)
 
         if let http = response as? HTTPURLResponse,
               !(200...299).contains(http.statusCode) {
 
-              // 👇 Print Flask error body like {"details":"..."}
-              if let text = String(data: data, encoding: .utf8) {
-                 print("createSite error body:", text)
-              }
+              // 👇 Print Flask error body
+                print("createSite error body:", String(data: data, encoding: .utf8) ?? "nil")
+                throw APIError.badResponse(http.statusCode)
+            }
+        
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
 
-              throw APIError.badResponse(http.statusCode)
-           }
+            return try decoder.decode(SiteDTO.self, from: data)
     }
 
 }

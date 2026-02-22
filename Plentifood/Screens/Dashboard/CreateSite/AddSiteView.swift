@@ -11,7 +11,7 @@ struct AddSiteView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var vm = CreateSiteViewModel()
     
-    let onDone: () -> Void
+    let onDone: (Site) -> Void
     
     private var orgId: Int? { AdminSessionStore.loadOrganizationId() }
 
@@ -251,6 +251,53 @@ struct AddSiteView: View {
                        }
                     }
                  }
+                 // register site button
+                 Section {
+                    Button {
+                       guard let orgId else {
+                          vm.errorMessage = "Missing organization ID. Please log in again."
+                          return
+                       }
+
+                       Task {
+                          if let created = await vm.submit(
+                             orgId: orgId,
+                             name: name,
+                             address1: address1,
+                             address2: nil,
+                             city: city,
+                             state: state,
+                             zip: zip,
+                             phone: phone,
+                             eligibility: eligibility!,
+                             selectedServices: selectedServices,
+                             hoursByDay: hoursByDay,
+                             serviceNotes: serviceNotes
+                          ) {
+                             onDone(created)
+                             dismiss()
+                          }
+                       }
+                    } label: {
+                       HStack {
+                          Spacer()
+                          if vm.isSubmitting {
+                             ProgressView()
+                          }
+                          Text(vm.isSubmitting ? "Registering..." : "Register Site")
+                             .font(.headline)
+                          Spacer()
+                       }
+                       .padding(.vertical, 8)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.orange)
+                    .disabled(!isValid || vm.isSubmitting || orgId == nil)
+                 } footer: {
+                    if !hoursAreValid {
+                       Text("Please ensure each open day has both times and that From is earlier than To.")
+                    }
+                 }
 
 
              }
@@ -264,41 +311,42 @@ struct AddSiteView: View {
                    }
                 }
 
-                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(vm.isSubmitting ? "Saving..." : "Save") {
-//                        print("Save tapped. orgId:", orgId as Any)
-                       guard let orgId else {
-                          vm.errorMessage = "Missing organization ID. Please log in again."
-                          return
-                       }
-
-                       Task {
-                           print("Submitting...")
-                           await vm.submit(
-                             orgId: orgId,
-                             name: name,
-                             address1: address1,
-                             address2: nil, // add address2 field later
-                             city: city,
-                             state: state,
-                             zip: zip,
-                             phone: phone,
-                             eligibility: eligibility!, // safe because isValid requires it
-                             selectedServices: selectedServices,
-                             hoursByDay: hoursByDay,
-                             serviceNotes: serviceNotes
-                          )
-                           print("didSucceed:", vm.didSucceed, "error:", vm.errorMessage as Any)
-
-                          if vm.didSucceed {
-                            onDone()
-                            dismiss()
-                          }
-                       }
-                    }
-                    .disabled(!isValid || vm.isSubmitting || orgId == nil)
-                    .tint(.orange)
-                 }
+//                 ToolbarItem(placement: .topBarTrailing) {
+//                    Button(vm.isSubmitting ? "Saving..." : "Save") {
+////                        print("Save tapped. orgId:", orgId as Any)
+//                       guard let orgId else {
+//                          vm.errorMessage = "Missing organization ID. Please log in again."
+//                          return
+//                       }
+//                        Task {
+//                           print("Submitting...")
+//
+//                           if let created = await vm.submit(
+//                              orgId: orgId,
+//                              name: name,
+//                              address1: address1,
+//                              address2: nil, // add address2 later
+//                              city: city,
+//                              state: state,
+//                              zip: zip,
+//                              phone: phone,
+//                              eligibility: eligibility!, // safe because isValid requires it
+//                              selectedServices: selectedServices,
+//                              hoursByDay: hoursByDay,
+//                              serviceNotes: serviceNotes
+//                           ) {
+//                              print("✅ created site:", created.id, created.name)
+//                              onDone(created)   // ✅ update dashboard immediately
+//                              dismiss()
+//                           } else {
+//                              print("❌ create failed:", vm.errorMessage as Any)
+//                           }
+//                        }
+//
+//                    }
+//                    .disabled(!isValid || vm.isSubmitting || orgId == nil)
+//                    .tint(.orange)
+//                 }
 
 
              }

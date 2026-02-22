@@ -43,23 +43,13 @@ final class CreateSiteViewModel: ObservableObject {
       serviceNotes: String,
 //      baseURL: URL
       
-   ) async {
+   ) async -> Site? {
+       
       isSubmitting = true
       errorMessage = nil
       didSucceed = false
       defer { isSubmitting = false }
 
-      // 1) Validate before sending (basic + backend-aligned)
-//      let validation = validate(
-//         name: name,
-//         address1: address1,
-//         city: city,
-//         state: state,
-//         zip: zip,
-//         eligibility: eligibility,
-//         selectedServices: selectedServices,
-//         hoursByDay: hoursByDay
-//      )
        if let validation = validate(
              name: name,
              address1: address1,
@@ -71,7 +61,7 @@ final class CreateSiteViewModel: ObservableObject {
              hoursByDay: hoursByDay
           ) {
              errorMessage = validation
-             return
+             return nil
           }
        
        let body = CreateSiteRequestDTO(
@@ -89,66 +79,18 @@ final class CreateSiteViewModel: ObservableObject {
              latitude: nil,
              longitude: nil
           )
-     
-       
-//      if let validation {
-//         errorMessage = validation
-//         return
-//      }
-//
-//      // 2) Build payload
-//      let payload = makePayload(
-//         name: name,
-//         address1: address1,
-//         address2: address2,
-//         city: city,
-//         state: state,
-//         zip: zip,
-//         phone: phone,
-//         eligibility: eligibility,
-//         selectedServices: selectedServices,
-//         hoursByDay: hoursByDay,
-//         serviceNotes: serviceNotes
-//      )
 
       // 3) POST
        do {
-          try await api.createSite(orgId: orgId, body: body)
-          didSucceed = true
-       } catch {
-          errorMessage = "Failed to create site: \(error.localizedDescription)"
-       }
+             let createdDTO = try await api.createSite(orgId: orgId, body: body)
+             didSucceed = true
+             return Site(dto: createdDTO)   // ✅ map DTO -> UI model
+          } catch {
+             errorMessage = "Failed to create site: \(error.localizedDescription)"
+             return nil
+          }
 
-//      do {
-//         let url = baseURL.appendingPathComponent("organizations/\(orgId)/sites")
-//         var request = URLRequest(url: url)
-//         request.httpMethod = "POST"
-//         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//
-//         // If you later add auth headers, this is where you do it:
-//         // request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-//
-//         request.httpBody = try JSONSerialization.data(withJSONObject: payload, options: [])
-//
-//         let (data, response) = try await URLSession.shared.data(for: request)
-//
-//         guard let http = response as? HTTPURLResponse else {
-//            errorMessage = "Unexpected response from server."
-//            return
-//         }
-//
-//         if (200...299).contains(http.statusCode) {
-//            didSucceed = true
-//            return
-//         } else {
-//            // Try to parse { "details": "..." } from your Flask errors
-//            errorMessage = parseFlaskError(data: data) ?? "Server error (\(http.statusCode))."
-//            return
-//         }
-//
-//      } catch {
-//         errorMessage = "Network error: \(error.localizedDescription)"
-//      }
+
    }
 }
 
