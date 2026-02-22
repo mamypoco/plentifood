@@ -16,18 +16,32 @@ struct OrganizationInfo {
 
 // MARK: - API DTOs (match backend JSON)
 
-struct OrganizationDetailDTO: Codable {
+struct OrganizationDetailDTO: Decodable {
     let id: Int
     let name: String
     let organizationType: String
     let websiteUrl: String?
-//   let sites: [Site]
     let sites: [SiteDTO]
     let createdAt: String
     let updatedAt: String?
 }
 
-struct SiteDTO: Codable {
+// Dashboard/Organization endpoint hours shape (matches backend JSON you printed)
+typealias DashboardHoursByDay = [String: [DashboardHoursEntry]]
+
+struct DashboardHoursEntry: Codable, Hashable {
+   let open: String
+   let close: String
+}
+
+//typealias DashboardHoursByDay = [String: DashboardHoursRangeDTO]
+//
+//struct DashboardHoursRangeDTO: Codable, Hashable {
+//   let from: String?
+//   let to: String?
+//}
+
+struct SiteDTO: Decodable {
    let id: Int
    let name: String
    let latitude: Double
@@ -47,7 +61,9 @@ struct SiteDTO: Codable {
    let services: [ServiceDTO]
    let serviceNotes: String?
 
-   let hours: HoursByDay?
+//   let hours: HoursByDay?
+//   let hours: DashboardHoursByDay?
+   let hours: FlexibleHoursByDay?
    let status: String?
 }
 
@@ -66,7 +82,7 @@ struct AdminUserDTO: Codable {
    let createdAt: String
 }
 
-struct RegisterResponseDTO: Codable {
+struct RegisterResponseDTO: Decodable {
    let adminUser: AdminUserDTO
    let organization: OrganizationDetailDTO
 }
@@ -142,9 +158,55 @@ extension Site {
       self.eligibility = dto.eligibility
       self.services = dto.services.map { Service(id: $0.id, name: $0.name) }
       self.service_notes = dto.serviceNotes
-
-      self.hours = dto.hours
+       
       self.status = dto.status
+//       self.hours = dto.hours.map { dashboardHours in
+//          var result: FlexibleHoursByDay = [:]
+//
+//          for day in weekdayOrder {
+//             if let entries = dashboardHours[day] {
+//                // Convert DashboardHoursEntry -> HoursEntry, then wrap
+//                let converted = entries.map { HoursEntry(open: $0.open, close: $0.close) }
+//                result[day] = .entries(converted)
+//             } else {
+//                result[day] = .entries([]) // closed
+//             }
+//          }
+//
+//          return result
+//       }
+//      self.hours = dto.hours.map { dashboardHours in
+//          var result: HoursByDay = [:]
+//
+//          for day in weekdayOrder {
+//             if let entries = dashboardHours[day] {
+//                // Convert DashboardHoursEntry -> HoursEntry
+//                result[day] = entries.map { HoursEntry(open: $0.open, close: $0.close) }
+//             } else {
+//                result[day] = []
+//             }
+//          }
+//
+//          return result
+//       }
+      self.hours = dto.hours
+//      self.hours = dto.hours.map { dashboardHours in
+//          var result: HoursByDay = [:]
+//
+//          for day in weekdayOrder { // your ["monday", ...]
+//             if let range = dashboardHours[day],
+//                let from = range.from,
+//                let to = range.to {
+//                result[day] = [HoursEntry(open: from, close: to)]
+//             } else {
+//                result[day] = []
+//             }
+//          }
+//
+//          return result
+//       }
+
+      
    }
 }
 

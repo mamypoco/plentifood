@@ -29,9 +29,7 @@ struct AdminDashboardView: View {
                 DashboardHeader()
                 GreetingView(name: adminName)
                 OrganizationCard(org: organization)
-                //                SitesSection(sites: sites) { site in
-                //                    activeSheet = .detail(site)
-                //                }
+                
                 SitesSection(
                     sites: sites,
                     onTapSite: { site in
@@ -41,12 +39,6 @@ struct AdminDashboardView: View {
                         showAddSite = true
                     }
                 )
-                .sheet(isPresented: $showAddSite) {
-                    AddSiteView(onDone: {
-                        showAddSite = false
-                        // optional later: refresh list
-                        // Task { await vm.load() }
-                    })}
                     
                 }
                 .padding()
@@ -72,15 +64,13 @@ struct AdminDashboardView: View {
                         .presentationDragIndicator(.visible)
                 }
             }
-            .sheet(isPresented: $showAddSite) {
-                AddSiteView(
-                    onDone: {
-                        showAddSite = false
-                        Task { await loadDashboard() }
-                    }
-                )
-            }
-            
+            .sheet(isPresented: $showAddSite, onDismiss: {
+               Task { await loadDashboard() }   // ✅ server truth after closing
+            }) {
+               AddSiteView { newSite in
+                  sites.insert(newSite, at: 0)  // ✅ immediate UI update
+               }
+            }           
             
             .alert("Error", isPresented: Binding(
                 get: { errorMessage != nil },

@@ -10,7 +10,7 @@ import Foundation
 enum Eligibility: String, CaseIterable, Identifiable, Codable {
     case generalPublic = "general_public"
     case olderAdults = "older_adults_and_eligible"
-    case youthAdults = "youth_young_adult"
+    case youthAdults = "youth_young_adults"
 
    var id: String { rawValue }
 

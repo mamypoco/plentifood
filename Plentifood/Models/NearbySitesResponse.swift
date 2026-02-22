@@ -8,7 +8,7 @@
 import Foundation
 import CoreLocation
 
-struct NearbySitesResponse: Codable {
+struct NearbySitesResponse: Decodable {
     let total_results: Int
     let results: [Site]
 }
@@ -24,13 +24,16 @@ struct HoursEntry: Codable, Hashable {
    let close: String
 }
 
-//typealias HoursByDay = [String: [HoursRangeDTO]]
-typealias HoursByDay = [String: HoursRangeDTO]
+////typealias HoursByDay = [String: [HoursRangeDTO]]
+//typealias HoursByDay = [String: HoursRangeDTO]
+// This is for map
+typealias HoursByDay = [String: [HoursEntry]]
 
-struct HoursRangeDTO: Codable, Hashable {
-   let from: String?
-   let to: String?
-}
+
+//struct HoursRangeDTO: Codable, Hashable {
+//   let from: String?
+//   let to: String?
+//}
 
 
 let weekdayOrder = [
@@ -39,7 +42,7 @@ let weekdayOrder = [
 ]
 
 
-struct Site: Codable, Identifiable, Hashable {
+struct Site: Decodable, Identifiable, Hashable {
     
    let id: Int
    let name: String
@@ -60,7 +63,8 @@ struct Site: Codable, Identifiable, Hashable {
    let services: [Service]
    let service_notes: String?
 
-   let hours: HoursByDay?
+//   let hours: HoursByDay?
+   let hours: FlexibleHoursByDay?
    let status: String?
     
     
@@ -108,17 +112,42 @@ extension Service {
 
 extension Site {
    func hoursForDay(_ day: String) -> String {
-      guard let range = hours?[day] else {
-         return "Closed"
-      }
+      guard let dayValue = hours?[day] else { return "Closed" }
 
-      if let from = range.from, let to = range.to {
-         return "\(from) – \(to)"
-      } else {
-         return "Closed"
-      }
+      let entries = dayValue.normalizedEntries()
+      guard !entries.isEmpty else { return "Closed" }
+
+      return entries
+         .map { "\($0.open) – \($0.close)" }
+         .joined(separator: ", ")
    }
 }
+
+//extension Site {
+//   func hoursForDay(_ day: String) -> String {
+//      guard let entries = hours?[day], !entries.isEmpty else {
+//         return "Closed"
+//      }
+//
+//      return entries
+//         .map { "\($0.open) – \($0.close)" }
+//         .joined(separator: ", ")
+//   }
+//}
+
+//extension Site {
+//   func hoursForDay(_ day: String) -> String {
+//      guard let range = hours?[day] else {
+//         return "Closed"
+//      }
+//
+//      if let from = range.from, let to = range.to {
+//         return "\(from) – \(to)"
+//      } else {
+//         return "Closed"
+//      }
+//   }
+//}
 
 
 // MARK: - Convenience initializers & samples
