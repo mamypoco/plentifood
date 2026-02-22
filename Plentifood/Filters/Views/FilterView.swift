@@ -123,7 +123,6 @@ struct FilterView: View {
         }
 
        filters = draft
-//       dismissKeyboard()
        dismiss()
    }
 }
